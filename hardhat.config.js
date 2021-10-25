@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
+require("dotenv").config();
 const { PROJECT_ID, PRIVATE_KEY } = process.env;
 
 module.exports = {
