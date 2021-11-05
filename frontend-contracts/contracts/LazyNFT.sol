@@ -8,9 +8,15 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
   using ECDSA for bytes32;
+
+  // to keep track of tokenIds generated (that is the ones you make a voucher for)
+  Counters.Counter private _tokenIds;
+  // address of the NFTmarketplace
+  address marketPlaceAddress;
 
   bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
@@ -59,6 +65,7 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
     // record payment to signer's withdrawal balance
     pendingWithdrawals[signer] += msg.value;
 
+
     return voucher.tokenId;
   }
 
@@ -81,8 +88,10 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
   /// @notice Returns a hash of the given NFTVoucher, prepared using EIP712 typed data hashing rules.
   /// @param voucher An NFTVoucher to hash.
   function _hash(NFTVoucher calldata voucher) internal view returns (bytes32) {
+
     return _hashTypedDataV4(keccak256(abi.encode(
       keccak256("NFTVoucher(uint256 tokenId,uint256 minPrice,string uri)"),
+      //voucher.tokenId,
       voucher.tokenId,
       voucher.minPrice,
       keccak256(bytes(voucher.uri))
