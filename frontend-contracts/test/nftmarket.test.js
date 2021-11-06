@@ -17,17 +17,24 @@ describe("NFTMarket", function () {
 
     const auctionPrice = ethers.utils.parseUnits("100", "ether");
 
-    const id = await nft.createToken("https://www.mytokenlocation.com");
-    const id2 = await nft.createToken("https://www.mytokenlocation2.com");
+    let tx1 = await nft.createToken("https://www.mytokenlocation.com");
+    let tx2 = await nft.createToken("https://www.mytokenlocation2.com");
+    let tx3 = await nft.createToken("https://www.mytokenlocation2.com");
+    let tx4 = await nft.createToken("https://www.mytokenlocation2.com");
+    let tx5 = await nft.createToken("https://www.mytokenlocation2.com");
 
-    for (let i = 0; i < 2; i += 2) {
-      await market.createMarketItem(nftContractAddress, i + 1, auctionPrice, {
-        value: listingPrice,
-      });
-      await market.createMarketItem(nftContractAddress, i + 2, auctionPrice, {
-        value: listingPrice,
-      });
-    }
+    let tx = await tx5.wait();
+    let event = tx.events[0];
+    let value = event.args[2];
+    let tokenId = value.toNumber();
+    console.log(tokenId);
+
+    await market.createMarketItem(nftContractAddress, 1, auctionPrice, {
+      value: listingPrice,
+    });
+    await market.createMarketItem(nftContractAddress, 2, auctionPrice, {
+      value: listingPrice,
+    });
 
     // purchasing that nft from addr1
     const [, addr1] = await ethers.getSigners();
@@ -42,7 +49,6 @@ describe("NFTMarket", function () {
     //}
 
     let items = await market.fetchMarketItems();
-    console.log(items);
     //items = await Promise.all(
     //items.map(async (i) => {
     //const tokenUri = await nft.tokenURI(i.tokenId);
