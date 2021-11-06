@@ -7,7 +7,7 @@ async function deploy() {
   const [minter, redeemer, _] = await ethers.getSigners();
 
   // deploying the market
-  const Market = await ethers.getContractFactory("LazyNFTMarket");
+  const Market = await ethers.getContractFactory("LazyNFTMarketPlace");
   const marketContract = await Market.deploy();
 
   let factory = await ethers.getContractFactory("LazyNFT", minter);
@@ -49,17 +49,31 @@ describe("LazyNFTMarketPlace", function () {
       signer: minter,
     });
     const minPrice = ethers.constants.WeiPerEther;
+    // creating a voucher
+    for (let i = 1; i < 100; i++) {
+      await lazyMinter.createVoucher(
+        i,
+        "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+        minPrice
+      );
+    }
     const { voucher, signature } = await lazyMinter.createVoucher(
-      1,
+      101,
       "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
       minPrice
     );
 
-    console.log(voucher.tokenId);
+    // redeeming the voucher from a different wallet than the minter
+    let txn;
     await expect(
-      redeemerContract.redeem(redeemer.address, voucher, signature, {
-        value: minPrice,
-      })
+      (txn = await redeemerContract.redeem(
+        redeemer.address,
+        voucher,
+        signature,
+        {
+          value: minPrice,
+        }
+      ))
     )
       .to.emit(contract, "Transfer")
       .withArgs(
@@ -69,5 +83,12 @@ describe("LazyNFTMarketPlace", function () {
       )
       .and.to.emit(contract, "Transfer")
       .withArgs(minter.address, redeemer.address, voucher.tokenId);
+
+    let tx = await txn.wait();
+    let event = tx.events[0];
+    let value = event.args[2];
+    // token id stored on the blockchain
+    let tokenId = value.toNumber();
+    console.log(tokenId);
   });
 });
