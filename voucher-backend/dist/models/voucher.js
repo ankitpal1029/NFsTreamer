@@ -5,13 +5,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const VoucherSchema = new mongoose_1.default.Schema({
-    ipfs: {
-        type: String,
-        required: true,
-    },
     voucher: {
-        type: String,
-        required: true,
+        uri: {
+            type: String,
+            required: true,
+        },
+        minPrice: {
+            type: {
+                type: String,
+                required: true,
+            },
+            hex: {
+                type: String,
+                required: true,
+            },
+        },
+        tokenId: {
+            type: Number,
+            required: true,
+            unique: true,
+        },
     },
     signature: {
         type: String,
@@ -19,9 +32,6 @@ const VoucherSchema = new mongoose_1.default.Schema({
     },
     redeemed: {
         type: Boolean,
-        required: true,
-    },
-    minPrice: {
         required: true,
     },
 });

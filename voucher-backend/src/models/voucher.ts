@@ -1,13 +1,26 @@
 import mongoose from "mongoose";
 
 const VoucherSchema = new mongoose.Schema({
-  ipfs: {
-    type: String,
-    required: true,
-  },
   voucher: {
-    type: String,
-    required: true,
+    uri: {
+      type: String,
+      required: true,
+    },
+    minPrice: {
+      type: {
+        type: String,
+        required: true,
+      },
+      hex: {
+        type: String,
+        required: true,
+      },
+    },
+    tokenId: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
   },
   signature: {
     type: String,
@@ -15,9 +28,6 @@ const VoucherSchema = new mongoose.Schema({
   },
   redeemed: {
     type: Boolean,
-    required: true,
-  },
-  minPrice: {
     required: true,
   },
 });

@@ -11,22 +11,26 @@ interface IvoucherAPIData {
     tokenId: Number;
   };
   signature: String;
-  ipfs: String;
-  tokenId: Number;
 }
-const CreateVoucher = (req: Request, res: Response) => {
-  console.log(req.body.data);
-  console.log(req.body.data[0].voucher.minPrice);
-
+const CreateVoucher = async (req: Request, res: Response) => {
   let recievedData: IvoucherAPIData[] = req.body.data;
-  let insertData = recievedData.map((voucher: IvoucherAPIData) => ({
-    ipfs: voucher.ipfs,
-    voucher: voucher.voucher,
-    signature: voucher.signature,
+  console.log(typeof recievedData[0].voucher.minPrice);
+  let insertData = recievedData.map((x: IvoucherAPIData) => ({
+    voucher: {
+      uri: x.voucher.uri,
+      minPrice: x.voucher.minPrice,
+      tokenId: x.voucher.tokenId,
+    },
+    signature: x.signature,
     redeemed: false,
-    minPrice: voucher.voucher.minPrice,
   }));
   console.log(insertData);
+  try {
+    const response = await Voucher.insertMany(insertData);
+    console.log(response);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export default CreateVoucher;
