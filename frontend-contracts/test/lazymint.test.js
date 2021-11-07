@@ -3,6 +3,7 @@ const { ethers } = require("hardhat");
 const { LazyMinter } = require("../lib");
 const { solidity } = require("ethereum-waffle");
 const chai = require("chai");
+const axios = require("axios").default;
 chai.use(solidity);
 
 async function deploy() {
@@ -210,5 +211,37 @@ describe("LazyNFT", function () {
 
     // minter should now have zero available
     expect(await contract.availableToWithdraw()).to.equal(0);
+  });
+
+  it("Should add 2 vouchers to the database", async function () {
+    const { contract, redeemerContract, redeemer, minter } = await deploy();
+
+    const lazyMinter = new LazyMinter({
+      contractAddress: contract.address,
+      signer: minter,
+    });
+
+    const numberToMint = 2;
+    let objToSend = [];
+
+    for (let i = 0; i < numberToMint; i++) {
+      const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
+      let tokenId = i + 1;
+      const { voucher, signature } = await lazyMinter.createVoucher(
+        tokenId,
+        "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+        minPrice
+      );
+      objToSend.push({
+        voucher,
+        signature,
+        ipfs: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+        tokenId,
+      });
+    }
+
+    axios.post("http://localhost:5000/addVoucher", {
+      data: objToSend,
+    });
   });
 });

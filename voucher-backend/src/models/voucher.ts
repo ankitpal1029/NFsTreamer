@@ -17,6 +17,9 @@ const VoucherSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  minPrice: {
+    required: true,
+  },
 });
 
 export default mongoose.model("Voucher", VoucherSchema);

@@ -21,6 +21,9 @@ const VoucherSchema = new mongoose_1.default.Schema({
         type: Boolean,
         required: true,
     },
+    minPrice: {
+        required: true,
+    },
 });
 exports.default = mongoose_1.default.model("Voucher", VoucherSchema);
 //# sourceMappingURL=voucher.js.map
