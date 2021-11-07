@@ -114,26 +114,29 @@ describe("LazyNFT", function () {
     ).to.be.revertedWith("Signature invalid or unauthorized");
   });
 
-  //it("Should fail to redeem an NFT voucher that's been modified", async function () {
-  //const { contract, redeemerContract, redeemer, minter } = await deploy();
+  it("Should fail to redeem an NFT voucher that's been modified", async function () {
+    const { contract, redeemerContract, redeemer, minter } = await deploy();
 
-  //const signers = await ethers.getSigners();
-  //const rando = signers[signers.length - 1];
+    const signers = await ethers.getSigners();
+    const rando = signers[signers.length - 1];
 
-  //const lazyMinter = new LazyMinter({
-  //contractAddress: contract.address,
-  //signer: rando,
-  //});
-  //const { voucher, signature } = await lazyMinter.createVoucher(
-  //1,
-  //"ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
-  //);
+    const lazyMinter = new LazyMinter({
+      contractAddress: contract.address,
+      signer: rando,
+    });
+    const collection = "meme";
+    const { voucher, signature } = await lazyMinter.createVoucher(
+      1,
+      "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+      0,
+      collection
+    );
 
-  //voucher.tokenId = 2;
-  //await expect(
-  //redeemerContract.redeem(redeemer.address, voucher, signature)
-  //).to.be.revertedWith("Signature invalid or unauthorized");
-  //});
+    voucher.tokenId = 2;
+    await expect(
+      redeemerContract.redeem(redeemer.address, voucher, signature)
+    ).to.be.revertedWith("Signature invalid or unauthorized");
+  });
 
   it("Should redeem if payment is >= minPrice", async function () {
     const { contract, redeemerContract, redeemer, minter } = await deploy();
