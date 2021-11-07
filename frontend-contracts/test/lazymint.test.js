@@ -261,8 +261,59 @@ describe("LazyNFT", function () {
       });
     }
 
-    axios.post("http://localhost:5000/addVoucher", {
-      data: objToSend,
+    try {
+      const res = await axios.post("http://localhost:5000/addVoucher", {
+        data: objToSend,
+      });
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  it("Should add 2 vouchers after fetching current tokenId", async function () {
+    const { contract, redeemerContract, redeemer, minter } = await deploy();
+
+    const lazyMinter = new LazyMinter({
+      contractAddress: contract.address,
+      signer: minter,
     });
+    const numberToMint = 2;
+    let objToSend = [];
+
+    let currtokenId;
+    try {
+      currtokenId = await axios.get("http://localhost:5000/getCurrentId");
+    } catch (err) {
+      console.log(err);
+    }
+    console.log(currtokenId.data.currId);
+    const tokenId = currtokenId.data.currId + 1;
+    for (let i = tokenId; i <= tokenId + 2; i++) {
+      const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
+      let tokenId = i + 1;
+      const collection = "meme";
+      const { voucher, signature } = await lazyMinter.createVoucher(
+        tokenId,
+        "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+        minPrice,
+        collection
+      );
+      objToSend.push({
+        voucher,
+        signature,
+        ipfs: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+        tokenId,
+      });
+    }
+
+    try {
+      const res = await axios.post("http://localhost:5000/addVoucher", {
+        data: objToSend,
+      });
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   });
 });

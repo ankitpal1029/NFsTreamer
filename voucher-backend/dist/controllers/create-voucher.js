@@ -16,13 +16,18 @@ const CreateVoucher = async (req, res) => {
         signature: x.signature,
         redeemed: false,
     }));
-    console.log(insertData);
     try {
         const response = await voucher_1.default.insertMany(insertData);
         console.log(response);
+        return res.json({
+            status: "success",
+        });
     }
     catch (err) {
         console.log(err);
+        return res.json({
+            error: "Voucher with that tokenId has already been generated",
+        });
     }
 };
 exports.default = CreateVoucher;
