@@ -38,6 +38,7 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
 
     /// @notice The metadata URI to associate with this token.
     string uri;
+    string collection;
   }
 
 
@@ -90,11 +91,12 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
   function _hash(NFTVoucher calldata voucher) internal view returns (bytes32) {
 
     return _hashTypedDataV4(keccak256(abi.encode(
-      keccak256("NFTVoucher(uint256 tokenId,uint256 minPrice,string uri)"),
+      keccak256("NFTVoucher(uint256 tokenId,uint256 minPrice,string uri,string collection)"),
       //voucher.tokenId,
       voucher.tokenId,
       voucher.minPrice,
-      keccak256(bytes(voucher.uri))
+      keccak256(bytes(voucher.uri)),
+      keccak256(bytes(voucher.collection))
     )));
   }
 

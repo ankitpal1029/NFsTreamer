@@ -3,6 +3,7 @@ const { ethers } = require("hardhat");
 const { LazyMinter } = require("../lib");
 const { solidity } = require("ethereum-waffle");
 const chai = require("chai");
+const axios = require("axios").default;
 chai.use(solidity);
 
 async function deploy() {
@@ -40,9 +41,13 @@ describe("LazyNFT", function () {
       contractAddress: contract.address,
       signer: minter,
     });
+    const collection = "meme";
+    const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
     const { voucher, signature } = await lazyMinter.createVoucher(
       1,
-      "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+      "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+      0,
+      collection
     );
 
     await expect(redeemerContract.redeem(redeemer.address, voucher, signature))
@@ -63,9 +68,12 @@ describe("LazyNFT", function () {
       contractAddress: contract.address,
       signer: minter,
     });
+    const collection = "meme";
     const { voucher, signature } = await lazyMinter.createVoucher(
       1,
-      "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+      "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+      0,
+      collection
     );
 
     await expect(redeemerContract.redeem(redeemer.address, voucher, signature))
@@ -93,9 +101,12 @@ describe("LazyNFT", function () {
       contractAddress: contract.address,
       signer: rando,
     });
+    const collection = "meme";
     const { voucher, signature } = await lazyMinter.createVoucher(
       1,
-      "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+      "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+      0,
+      collection
     );
 
     await expect(
@@ -113,9 +124,12 @@ describe("LazyNFT", function () {
       contractAddress: contract.address,
       signer: rando,
     });
+    const collection = "meme";
     const { voucher, signature } = await lazyMinter.createVoucher(
       1,
-      "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+      "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+      0,
+      collection
     );
 
     voucher.tokenId = 2;
@@ -131,11 +145,13 @@ describe("LazyNFT", function () {
       contractAddress: contract.address,
       signer: minter,
     });
+    const collection = "meme";
     const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
     const { voucher, signature } = await lazyMinter.createVoucher(
       1,
       "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-      minPrice
+      minPrice,
+      collection
     );
 
     await expect(
@@ -161,10 +177,12 @@ describe("LazyNFT", function () {
       signer: minter,
     });
     const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
+    const collection = "meme";
     const { voucher, signature } = await lazyMinter.createVoucher(
       1,
       "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-      minPrice
+      minPrice,
+      collection
     );
 
     const payment = minPrice.sub(10000);
@@ -183,13 +201,15 @@ describe("LazyNFT", function () {
       signer: minter,
     });
     const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
+    const collection = "meme";
     const { voucher, signature } = await lazyMinter.createVoucher(
       1,
       "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-      minPrice
+      minPrice,
+      collection
     );
 
-    // the payment should be sent from the redeemer's account to the contract address
+    //the payment should be sent from the redeemer's account to the contract address
     await expect(
       await redeemerContract.redeem(redeemer.address, voucher, signature, {
         value: minPrice,
@@ -199,16 +219,101 @@ describe("LazyNFT", function () {
       [minPrice.mul(-1), minPrice]
     );
 
-    // minter should have funds available to withdraw
+    //minter should have funds available to withdraw
     expect(await contract.availableToWithdraw()).to.equal(minPrice);
 
-    // withdrawal should increase minter's balance
+    //withdrawal should increase minter's balance
     await expect(await contract.withdraw()).to.changeEtherBalance(
       minter,
       minPrice
     );
 
-    // minter should now have zero available
+    //minter should now have zero available
     expect(await contract.availableToWithdraw()).to.equal(0);
+  });
+
+  it("Should add 2 vouchers to the database", async function () {
+    const { contract, redeemerContract, redeemer, minter } = await deploy();
+
+    const lazyMinter = new LazyMinter({
+      contractAddress: contract.address,
+      signer: minter,
+    });
+
+    const numberToMint = 2;
+    let objToSend = [];
+
+    for (let i = 0; i < numberToMint; i++) {
+      const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
+      let tokenId = i + 1;
+      const collection = "meme";
+      const { voucher, signature } = await lazyMinter.createVoucher(
+        tokenId,
+        "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+        minPrice,
+        collection
+      );
+      objToSend.push({
+        voucher,
+        signature,
+        ipfs: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+        tokenId,
+      });
+    }
+
+    try {
+      const res = await axios.post("http://localhost:5000/addVoucher", {
+        data: objToSend,
+      });
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  it("Should add 2 vouchers after fetching current tokenId", async function () {
+    const { contract, redeemerContract, redeemer, minter } = await deploy();
+
+    const lazyMinter = new LazyMinter({
+      contractAddress: contract.address,
+      signer: minter,
+    });
+    const numberToMint = 2;
+    let objToSend = [];
+
+    let currtokenId;
+    try {
+      currtokenId = await axios.get("http://localhost:5000/getCurrentId");
+    } catch (err) {
+      console.log(err);
+    }
+    console.log(currtokenId.data.currId);
+    const tokenId = currtokenId.data.currId + 1;
+    for (let i = tokenId; i <= tokenId + 2; i++) {
+      const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
+      let tokenId = i + 1;
+      const collection = "meme";
+      const { voucher, signature } = await lazyMinter.createVoucher(
+        tokenId,
+        "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+        minPrice,
+        collection
+      );
+      objToSend.push({
+        voucher,
+        signature,
+        ipfs: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+        tokenId,
+      });
+    }
+
+    try {
+      const res = await axios.post("http://localhost:5000/addVoucher", {
+        data: objToSend,
+      });
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   });
 });
