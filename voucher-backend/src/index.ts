@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { createServer } from "http";
 
 import voucherRoutes from "./routes/vouchers";
@@ -13,7 +13,12 @@ const main = async () => {
   const httpServer = createServer(app);
 
   const io = new Server(httpServer);
-  io.on("connection", (socket) => {});
+  io.on("connection", (socket: Socket) => {
+    console.log(`We have a new connection !!!`);
+    socket.on("disconnect", () => {
+      console.log(`User just left`);
+    });
+  });
 
   app.use(express.json());
   app.use(cors());
