@@ -12,16 +12,12 @@ const main = async () => {
   const app = express();
   const httpServer = createServer(app);
 
-  const io = new Server(httpServer);
-  io.on("connection", (socket: Socket) => {
-    console.log(`We have a new connection !!!`);
-    socket.on("disconnect", () => {
-      console.log(`User just left`);
-    });
-  });
-
   app.use(express.json());
-  app.use(cors());
+  app.use(
+    cors({
+      origin: "https://localhost:8080",
+    })
+  );
 
   app.use(voucherRoutes);
 
@@ -35,6 +31,22 @@ const main = async () => {
   //app.listen(PORT, () => {
   //console.log(`server is running on port ${PORT}`);
   //});
+
+  const io = new Server(httpServer, {
+    path: "/",
+    cors: {
+      origin: "https://localhost:8080",
+      methods: ["GET", "POST"],
+      credentials: false,
+    },
+  });
+
+  io.on("connection", (socket: Socket) => {
+    console.log(`We have a new connection !!!`);
+    socket.on("disconnect", () => {
+      console.log(`User just left`);
+    });
+  });
 
   httpServer.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`);
