@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const voucher_1 = __importDefault(require("../models/voucher"));
-const FetchCurrentId = async (req, res) => {
+const FetchCurrentId = async (_, res) => {
     let currId;
     try {
         currId = await voucher_1.default.countDocuments({});

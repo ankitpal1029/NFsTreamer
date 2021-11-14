@@ -9,6 +9,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const socket_io_1 = require("socket.io");
 const http_1 = require("http");
 const vouchers_1 = __importDefault(require("./routes/vouchers"));
+const users_1 = require("./socket/users");
 require("dotenv").config();
 const main = async () => {
     const app = (0, express_1.default)();
@@ -32,6 +33,27 @@ const main = async () => {
     });
     io.on("connection", (socket) => {
         console.log(`We have a new connection !!!`);
+        socket.on("join", ({ name, room }, callback) => {
+            const { error, user } = (0, users_1.addUser)({ name, room, id: socket.id });
+            if (error) {
+                return callback(error);
+            }
+            socket.emit("message", {
+                user: "admin",
+                text: `${user === null || user === void 0 ? void 0 : user.name}, welcome to the chat`,
+            });
+            socket.broadcast.to(user.room).emit("message", {
+                user: "admin",
+                text: `${user === null || user === void 0 ? void 0 : user.name}, has joined the chat`,
+            });
+            socket.join(user.room);
+            callback();
+        });
+        socket.on("sendMessage", (message, callback) => {
+            const user = (0, users_1.getUser)(socket.id);
+            io.to(user.room).emit("message", { user: user === null || user === void 0 ? void 0 : user.name, text: message });
+            callback();
+        });
         socket.on("disconnect", () => {
             console.log(`User just left`);
         });

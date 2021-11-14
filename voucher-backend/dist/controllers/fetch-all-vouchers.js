@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const voucher_1 = __importDefault(require("../models/voucher"));
 const FetchAllVouchers = async (req, res) => {
     let allVoucher;
+    console.log(req);
     try {
         allVoucher = await voucher_1.default.find({});
     }

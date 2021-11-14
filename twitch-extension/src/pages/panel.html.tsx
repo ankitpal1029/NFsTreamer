@@ -11,16 +11,16 @@ declare global {
 let socket: any;
 
 const PanelView: React.FC = () => {
-  const roomName = "something";
-  const [userId, setUserId] = useState("");
+  const room = "something";
+  const [userId, setUserId] = useState("not on twitch");
   const ENDPOINT = "http://localhost:5000";
 
   useEffect(() => {
     if (window.Twitch) {
       window.Twitch.ext.onAuthorized(function (auth: any) {
-        window.Twitch.ext.rig.log(auth.userId);
-        window.Twitch.ext.rig.log(io);
-        console.log("bitch");
+        //window.Twitch.ext.rig.log(auth.userId);
+        //window.Twitch.ext.rig.log(io);
+        //console.log("bitch");
 
         setUserId(auth.userId);
 
@@ -30,10 +30,15 @@ const PanelView: React.FC = () => {
       console.log("you're not on twitch or twitch rig");
     }
 
-    const socket = io(ENDPOINT);
-    console.log(socket);
+    socket = io(ENDPOINT);
+    socket.emit("join", { name: userId, room });
+    //window.Twitch.ext.rig.log(socket);
     //console.log("socket data", socket);
-  });
+    return () => {
+      socket.disconnect();
+      socket.off();
+    };
+  }, [ENDPOINT, userId]);
   return <h1>Chat</h1>;
 };
 
