@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import Message from "./message/message";
 import "./messages.css";
 
@@ -14,6 +15,13 @@ const Messages = ({
   messages: IMessageFormat[];
   name: string;
 }) => {
+  const divRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (divRef.current != null) {
+      divRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  });
   return (
     <div>
       {messages.map((msg, i) => (
@@ -21,6 +29,7 @@ const Messages = ({
           <Message message={msg} name={name} />
         </div>
       ))}
+      <div ref={divRef}></div>
     </div>
   );
 };
