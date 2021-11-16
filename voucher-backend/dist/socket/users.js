@@ -14,8 +14,9 @@ const addUser = ({ name, room, id, }) => {
 exports.addUser = addUser;
 const removeUser = (id) => {
     const index = users.findIndex((user) => user.id == id);
+    console.log(id, "has been removed from user");
     if (index !== -1) {
-        return users.splice(index, 1)[0];
+        return { user: users.splice(index, 1)[0] };
     }
     return { error: "User doesn't exist in room" };
 };

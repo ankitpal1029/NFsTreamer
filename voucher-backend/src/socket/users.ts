@@ -4,10 +4,11 @@ interface ILiveChatUsers {
   name: string;
 }
 
-interface IAddUserReturn {
+interface IGeneralReturn {
   user?: ILiveChatUsers;
   error?: string;
 }
+
 const users: ILiveChatUsers[] = [];
 
 const addUser = ({
@@ -18,7 +19,7 @@ const addUser = ({
   name: string;
   room: string;
   id: string;
-}): IAddUserReturn => {
+}): IGeneralReturn => {
   const existingUser = users.find(
     (user) => user.room == room && user.name == name
   );
@@ -33,11 +34,12 @@ const addUser = ({
   return { user };
 };
 
-const removeUser = (id: string) => {
+const removeUser = (id: string): IGeneralReturn => {
   const index = users.findIndex((user) => user.id == id);
+  console.log(id, "has been removed from user");
 
   if (index !== -1) {
-    return users.splice(index, 1)[0];
+    return { user: users.splice(index, 1)[0] };
   }
 
   return { error: "User doesn't exist in room" };

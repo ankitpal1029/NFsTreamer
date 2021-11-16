@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
+import "./panel.html.css";
+import InfoBar from "../components/panel/infobar/infobar";
+import Input from "../components/panel/input/input";
+import Messages from "../components/panel/messages/messages";
 
 declare global {
   interface Window {
@@ -8,11 +12,18 @@ declare global {
   }
 }
 
+interface IMessageFormat {
+  user: string;
+  text: string;
+}
+
 let socket: any;
 
 const PanelView: React.FC = () => {
   const room = "something";
   const [userId, setUserId] = useState("not on twitch");
+  const [message, setMessage] = useState<string>("");
+  const [messages, setMessages] = useState<IMessageFormat[]>([]);
   const ENDPOINT = "http://localhost:5000";
 
   useEffect(() => {
@@ -31,7 +42,11 @@ const PanelView: React.FC = () => {
     }
 
     socket = io(ENDPOINT);
-    socket.emit("join", { name: userId, room });
+    socket.emit("join", { name: userId, room }, (error: any) => {
+      if (error) {
+        alert(error);
+      }
+    });
     //window.Twitch.ext.rig.log(socket);
     //console.log("socket data", socket);
     return () => {
@@ -39,7 +54,40 @@ const PanelView: React.FC = () => {
       socket.off();
     };
   }, [ENDPOINT, userId]);
-  return <h1>Chat</h1>;
+
+  useEffect(() => {
+    socket.on(
+      "message",
+      (msg: IMessageFormat) => {
+        setMessages([...messages, msg]);
+      },
+      []
+    );
+  });
+
+  const sendMessage = (event: any) => {
+    event.preventDefault();
+    if (message) {
+      socket.emit("sendMessage", message, () => {
+        setMessage("");
+      });
+    }
+    console.log(message, messages);
+  };
+
+  return (
+    <div className="outerContainer">
+      <div className="container">
+        <InfoBar room={room} />
+        <Messages messages={messages} name={userId} />
+        <Input
+          message={message}
+          setMessage={setMessage}
+          sendMessage={sendMessage}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default PanelView;

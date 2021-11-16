@@ -63,20 +63,36 @@ const main = async () => {
         text: `${user?.name}, has joined the chat`,
       });
       socket.join(user!.room);
-
       callback();
     });
 
     socket.on("sendMessage", (message, callback) => {
       const user = getUser(socket.id);
 
-      io.to(user!.room).emit("message", { user: user?.name, text: message });
+      if (user) {
+        io.to(user!.room).emit("message", { user: user?.name, text: message });
+      } else {
+        console.log("this user isn't there in the room");
+      }
 
       callback();
     });
 
     socket.on("disconnect", () => {
       console.log(`User just left`);
+      const result = removeUser(socket.id);
+      console.log(result);
+
+      if (result.user) {
+        io.to(result!.user!.room).emit("message", {
+          user: "Admin",
+          text: `${result?.user?.name} has left.`,
+        });
+        io.to(result!.user!.room).emit("roomData", {
+          room: result!.user!.room,
+          users: getUsersInRoom(result!.user!.name),
+        });
+      }
     });
   });
 

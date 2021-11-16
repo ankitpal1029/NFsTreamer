@@ -10,9 +10,9 @@ import Box from "@mui/material/Box";
 import RestoreIcon from "@mui/icons-material/Restore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatIcon from "@mui/icons-material/Chat";
-import RecentNFTs from "../components/panel/recent-nfts";
-import LiveChat from "../components/panel/live-chat";
-import MyNFTs from "../components/panel/my-nfts";
+import RecentNFTs from "../components/panel-old/recent-nfts";
+import LiveChat from "../components/panel-old/live-chat";
+import MyNFTs from "../components/panel-old/my-nfts";
 
 interface TabPanelProps {
   children?: React.ReactNode;
