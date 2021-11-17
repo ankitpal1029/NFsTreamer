@@ -23,7 +23,7 @@ const Messages = ({
     }
   });
   return (
-    <div>
+    <div className="w-full">
       {messages.map((msg, i) => (
         <div key={i}>
           <Message message={msg} name={name} />

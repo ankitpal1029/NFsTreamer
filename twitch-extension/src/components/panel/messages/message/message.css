@@ -4,7 +4,8 @@
   padding: 5px 20px;
   color: white;
   display: inline-block;
-  max-width: 80%;
+  /*max-width: 80%;*/
+  width: 80%;
 }
 
 .messageText {
@@ -20,18 +21,11 @@
 }
 
 .messageContainer {
-  display: flex;
-  justify-content: flex-end;
-  padding: 0 5%;
-  margin-top: 3px;
+  @apply flex py-2 px-1 mt-1;
 }
 
 .sentText {
-  display: flex;
-  align-items: center;
-  font-family: Helvetica;
-  color: #828282;
-  letter-spacing: 0.3px;
+  @apply flex items-center font-sans;
 }
 
 .pl-10 {

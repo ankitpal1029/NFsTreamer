@@ -17,7 +17,7 @@ const main = async () => {
   app.use(express.json());
   app.use(
     cors({
-      origin: "https://localhost:8080",
+      origin: false,
     })
   );
 
@@ -33,9 +33,14 @@ const main = async () => {
   // setting up socket io
   const io = new Server(httpServer, {
     path: "/",
+    //cors: {
+    //origin: "https://localhost:8080",
+    //methods: ["GET", "POST"],
+    //credentials: false,
+    //},
     cors: {
-      origin: "https://localhost:8080",
-      methods: ["GET", "POST"],
+      origin: "https://6e7f-49-204-115-11.ngrok.io",
+      methods: ["GET", "POST,"],
       credentials: false,
     },
   });

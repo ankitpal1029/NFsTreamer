@@ -15,15 +15,14 @@ const Message = ({
     isSentByCurrentUser = true;
   }
   return isSentByCurrentUser ? (
-    <div className="messageContainer justifyEnd">
+    <div className="messageContainer justify-end">
       <p className="sentText pr-10">{name}</p>
       <div className="messageBox backgroundBlue">
         <p className="messageText colorWhite">{text}</p>
       </div>
     </div>
   ) : (
-    <div className="messageContainer justifyStart">
-      {/*<p className="sentText">{user}</p>*/}
+    <div className="messageContainer justify-start">
       <div className="messageBox backgroundLight">
         <p className="messageText colorDark">{text}</p>
       </div>

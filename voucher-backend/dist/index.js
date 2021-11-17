@@ -16,7 +16,7 @@ const main = async () => {
     const httpServer = (0, http_1.createServer)(app);
     app.use(express_1.default.json());
     app.use((0, cors_1.default)({
-        origin: "https://localhost:8080",
+        origin: false,
     }));
     app.use(vouchers_1.default);
     const { PORT, DB_CONNECTION } = process.env;
@@ -26,8 +26,8 @@ const main = async () => {
     const io = new socket_io_1.Server(httpServer, {
         path: "/",
         cors: {
-            origin: "https://localhost:8080",
-            methods: ["GET", "POST"],
+            origin: "https://6e7f-49-204-115-11.ngrok.io",
+            methods: ["GET", "POST,"],
             credentials: false,
         },
     });
