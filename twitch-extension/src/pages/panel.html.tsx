@@ -61,7 +61,7 @@ const PanelView: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<IMessageFormat[]>([]);
   //const ENDPOINT = "http://localhost:5000";
-  const ENDPOINT = "https://fe56-49-204-115-11.ngrok.io";
+  const ENDPOINT = "https://0e00-49-205-85-217.ngrok.io";
 
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
