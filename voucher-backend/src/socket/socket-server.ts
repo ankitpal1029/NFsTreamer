@@ -1,12 +1,7 @@
-import express from "express";
-import { Socket } from "socket.io";
-const router = express.Router();
-
+import { Server, Socket } from "socket.io";
 import { addUser, removeUser, getUser, getUsersInRoom } from "../socket/users";
-const app = express();
-const io = app.get("socketio");
 
-router.get("/chat", function () {
+const SocketServer = (io: Server) => {
   // socketio logic
   io.on("connection", (socket: Socket) => {
     console.log(`We have a new connection !!!`);
@@ -33,7 +28,7 @@ router.get("/chat", function () {
       callback();
     });
 
-    socket.on("sendMessage", (message, callback) => {
+    socket.on("sendMessage", (message: any, callback: any) => {
       const user = getUser(socket.id);
 
       if (user) {
@@ -62,6 +57,6 @@ router.get("/chat", function () {
       }
     });
   });
-});
+};
 
-export default router;
+export default SocketServer;

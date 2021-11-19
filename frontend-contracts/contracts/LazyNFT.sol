@@ -21,6 +21,16 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
   bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
   mapping (address => uint256) pendingWithdrawals;
+  struct MarketItem{
+      uint256 tokenId;
+      address owner;
+      address creator;
+      uint256 price;
+      string uri;
+      string collection;
+  }
+  mapping(address => MarketItem[]) nftsOwned;
+
 
   constructor(address payable minter)
     ERC721("LazyNFT", "LAZ") 
@@ -59,6 +69,34 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
     // first assign the token to the signer, to establish provenance on-chain
     _mint(signer, voucher.tokenId);
     _setTokenURI(voucher.tokenId, voucher.uri);
+
+    MarketItem memory newItemToPush = MarketItem({
+                                          tokenId: voucher.tokenId, 
+                                          owner: redeemer, 
+                                          creator: signer, 
+                                          price: voucher.minPrice, 
+                                          uri: voucher.uri, 
+                                          collection: voucher.collection
+                                        });
+    //nftsOwned[redeemer].push()
+    nftsOwned[redeemer].push(newItemToPush);
+
+    
+    //nftsOwned[redeemer].tokenId = voucher.tokenId;
+    //nftsOwned[redeemer].redeemer = redeemer;
+    //nftsOwned[redeemer].signer = signer;
+    //nftsOwned[redeemer].minPrice = voucher.minPrice;
+    //nftsOwned[redeemer].uri = voucher.uri;
+    //nftsOwned[redeemer].collection = voucher.collection;
+
+    //= nftsOwned(
+      //voucher.tokenId,
+      //redeemer,
+      //signer,
+      //voucher.minPrice,
+      //voucher.uri,
+      //voucher.collection
+    //);
     
     // transfer the token to the redeemer
     _transfer(signer, redeemer, voucher.tokenId);
@@ -115,6 +153,10 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
 
   function getAddress() public view returns (address){
     return address(this);
+  }
+
+  function fetchNFTsOwned(address _reqAddress) public view returns (MarketItem[] memory){
+    return nftsOwned[_reqAddress];
   }
 }
 

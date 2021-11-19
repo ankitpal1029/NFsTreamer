@@ -5,7 +5,7 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 
 import voucherRoutes from "./routes/vouchers";
-import liveChatRoutes from "./routes/live-chat";
+import SocketServer from "./socket/socket-server";
 
 require("dotenv").config();
 
@@ -32,6 +32,7 @@ const main = async () => {
     path: "/chat",
     cors: {
       origin: FRONTEND_CORS,
+      //origin: "https://localhost:8080",
       methods: ["GET", "POST,"],
       credentials: false,
     },
@@ -42,8 +43,10 @@ const main = async () => {
     console.log(`server is running on port ${PORT}`);
   });
 
+  SocketServer(io);
+
   app.use(voucherRoutes);
-  app.use(liveChatRoutes);
+  //app.use(liveChatRoutes);
   app.set("socketio", io);
 };
 

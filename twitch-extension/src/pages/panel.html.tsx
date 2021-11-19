@@ -61,7 +61,7 @@ const PanelView: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<IMessageFormat[]>([]);
   //const ENDPOINT = "http://localhost:5000";
-  const ENDPOINT = "https://0e00-49-205-85-217.ngrok.io";
+  const ENDPOINT = "https://beee-27-62-114-8.ngrok.io";
 
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -81,7 +81,9 @@ const PanelView: React.FC = () => {
       console.log("you're not on twitch or twitch rig");
     }
 
-    socket = io(ENDPOINT);
+    socket = io(`${ENDPOINT}`, {
+      path: "/chat",
+    });
     socket.emit("join", { name: userId, room }, (error: any) => {
       if (error) {
         alert(error);

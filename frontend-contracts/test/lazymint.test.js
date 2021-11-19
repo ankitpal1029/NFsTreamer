@@ -232,44 +232,44 @@ describe("LazyNFT", function () {
     expect(await contract.availableToWithdraw()).to.equal(0);
   });
 
-  it("Should add 2 vouchers to the database", async function () {
-    const { contract, redeemerContract, redeemer, minter } = await deploy();
+  //it("Should add 2 vouchers to the database", async function () {
+  //const { contract, redeemerContract, redeemer, minter } = await deploy();
 
-    const lazyMinter = new LazyMinter({
-      contractAddress: contract.address,
-      signer: minter,
-    });
+  //const lazyMinter = new LazyMinter({
+  //contractAddress: contract.address,
+  //signer: minter,
+  //});
 
-    const numberToMint = 2;
-    let objToSend = [];
+  //const numberToMint = 2;
+  //let objToSend = [];
 
-    for (let i = 0; i < numberToMint; i++) {
-      const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
-      let tokenId = i + 1;
-      const collection = "meme";
-      const { voucher, signature } = await lazyMinter.createVoucher(
-        tokenId,
-        "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-        minPrice,
-        collection
-      );
-      objToSend.push({
-        voucher,
-        signature,
-        ipfs: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-        tokenId,
-      });
-    }
+  //for (let i = 0; i < numberToMint; i++) {
+  //const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
+  //let tokenId = i + 1;
+  //const collection = "meme";
+  //const { voucher, signature } = await lazyMinter.createVoucher(
+  //tokenId,
+  //"ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+  //minPrice,
+  //collection
+  //);
+  //objToSend.push({
+  //voucher,
+  //signature,
+  //ipfs: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+  //tokenId,
+  //});
+  //}
 
-    try {
-      const res = await axios.post("http://localhost:5000/addVoucher", {
-        data: objToSend,
-      });
-      console.log(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  });
+  //try {
+  //const res = await axios.post("http://localhost:5000/addVoucher", {
+  //data: objToSend,
+  //});
+  //console.log(res.data);
+  //} catch (err) {
+  //console.log(err);
+  //}
+  //});
 
   it("Should add 2 vouchers after fetching current tokenId", async function () {
     const { contract, redeemerContract, redeemer, minter } = await deploy();
@@ -283,37 +283,39 @@ describe("LazyNFT", function () {
 
     let currtokenId;
     try {
-      currtokenId = await axios.get("http://localhost:5000/getCurrentId");
+      currtokenId = await axios.get(
+        "https://b8c0-49-204-116-235.ngrok.io/getCurrentId"
+      );
     } catch (err) {
       console.log(err);
     }
     console.log(currtokenId.data.currId);
-    const tokenId = currtokenId.data.currId + 1;
-    for (let i = tokenId; i <= tokenId + 2; i++) {
-      const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
-      let tokenId = i + 1;
-      const collection = "meme";
-      const { voucher, signature } = await lazyMinter.createVoucher(
-        tokenId,
-        "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-        minPrice,
-        collection
-      );
-      objToSend.push({
-        voucher,
-        signature,
-        ipfs: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-        tokenId,
-      });
-    }
+    //const tokenId = currtokenId.data.currId + 1;
+    //for (let i = tokenId; i <= tokenId + 2; i++) {
+    //const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
+    //let tokenId = i + 1;
+    //const collection = "meme";
+    //const { voucher, signature } = await lazyMinter.createVoucher(
+    //tokenId,
+    //"ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+    //minPrice,
+    //collection
+    //);
+    //objToSend.push({
+    //voucher,
+    //signature,
+    //ipfs: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+    //tokenId,
+    //});
+    //}
 
-    try {
-      const res = await axios.post("http://localhost:5000/addVoucher", {
-        data: objToSend,
-      });
-      console.log(res.data);
-    } catch (err) {
-      console.log(err);
-    }
+    //try {
+    //const res = await axios.post("http://localhost:5000/addVoucher", {
+    //data: objToSend,
+    //});
+    //console.log(res);
+    //} catch (err) {
+    //console.log(err);
+    //}
   });
 });

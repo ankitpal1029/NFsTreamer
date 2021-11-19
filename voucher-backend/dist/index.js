@@ -9,7 +9,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const socket_io_1 = require("socket.io");
 const http_1 = require("http");
 const vouchers_1 = __importDefault(require("./routes/vouchers"));
-const live_chat_1 = __importDefault(require("./routes/live-chat"));
+const socket_server_1 = __importDefault(require("./socket/socket-server"));
 require("dotenv").config();
 const main = async () => {
     const app = (0, express_1.default)();
@@ -33,8 +33,8 @@ const main = async () => {
     httpServer.listen(PORT, () => {
         console.log(`server is running on port ${PORT}`);
     });
+    (0, socket_server_1.default)(io);
     app.use(vouchers_1.default);
-    app.use(live_chat_1.default);
     app.set("socketio", io);
 };
 main().catch((err) => {

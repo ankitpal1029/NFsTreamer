@@ -1,14 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const router = express_1.default.Router();
 const users_1 = require("../socket/users");
-router.get("/chat", function (req) {
-    console.log("alskdjfslkdfjalsdkf");
-    let io = req.app.get("socketio");
+const SocketServer = (io) => {
     io.on("connection", (socket) => {
         console.log(`We have a new connection !!!`);
         socket.on("join", ({ name, room }, callback) => {
@@ -54,6 +47,6 @@ router.get("/chat", function (req) {
             }
         });
     });
-});
-exports.default = router;
-//# sourceMappingURL=live-chat.js.map
+};
+exports.default = SocketServer;
+//# sourceMappingURL=socket-server.js.map
