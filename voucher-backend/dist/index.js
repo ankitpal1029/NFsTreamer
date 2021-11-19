@@ -30,12 +30,11 @@ const main = async () => {
             credentials: false,
         },
     });
+    (0, socket_server_1.default)(io);
     httpServer.listen(PORT, () => {
         console.log(`server is running on port ${PORT}`);
     });
-    (0, socket_server_1.default)(io);
     app.use(vouchers_1.default);
-    app.set("socketio", io);
 };
 main().catch((err) => {
     console.log(err);

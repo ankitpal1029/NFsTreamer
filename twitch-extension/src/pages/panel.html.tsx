@@ -10,6 +10,7 @@ import SwipeableViews from "react-swipeable-views";
 import RestoreIcon from "@mui/icons-material/Restore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatIcon from "@mui/icons-material/Chat";
+import UserNFT from "../components/user-nft/user-nft";
 
 declare global {
   interface Window {
@@ -61,7 +62,7 @@ const PanelView: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<IMessageFormat[]>([]);
   //const ENDPOINT = "http://localhost:5000";
-  const ENDPOINT = "https://beee-27-62-114-8.ngrok.io";
+  const ENDPOINT = "https://b91f-49-204-134-22.ngrok.io";
 
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -164,11 +165,10 @@ const PanelView: React.FC = () => {
           axis={theme.direction === "rtl" ? "x-reverse" : "x"}
           index={value}
           onChangeIndex={handleChangeIndex}
-          style={{ marginTop: "20%" }}
         >
           <TabPanel value={value} index={0} dir={theme.direction}></TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
-            <div className="text-white text-7xl">Hey</div>
+            <UserNFT />
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
             <Box>

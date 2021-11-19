@@ -38,16 +38,15 @@ const main = async () => {
     },
   });
 
+  // Socket Logic
+  SocketServer(io);
+
   // starting server
   httpServer.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`);
   });
 
-  SocketServer(io);
-
   app.use(voucherRoutes);
-  //app.use(liveChatRoutes);
-  app.set("socketio", io);
 };
 
 main().catch((err) => {
