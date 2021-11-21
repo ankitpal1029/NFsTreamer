@@ -6,12 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const voucher_1 = __importDefault(require("../models/voucher"));
 const CreateVoucher = async (req, res) => {
     let recievedData = req.body.data;
-    console.log(typeof recievedData[0].voucher.minPrice);
+    console.log(recievedData);
     let insertData = recievedData.map((x) => ({
         voucher: {
             uri: x.voucher.uri,
             minPrice: x.voucher.minPrice,
             tokenId: x.voucher.tokenId,
+            collection: x.voucher.collection,
         },
         signature: x.signature,
         redeemed: false,

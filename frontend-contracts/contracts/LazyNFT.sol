@@ -80,23 +80,6 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
                                         });
     //nftsOwned[redeemer].push()
     nftsOwned[redeemer].push(newItemToPush);
-
-    
-    //nftsOwned[redeemer].tokenId = voucher.tokenId;
-    //nftsOwned[redeemer].redeemer = redeemer;
-    //nftsOwned[redeemer].signer = signer;
-    //nftsOwned[redeemer].minPrice = voucher.minPrice;
-    //nftsOwned[redeemer].uri = voucher.uri;
-    //nftsOwned[redeemer].collection = voucher.collection;
-
-    //= nftsOwned(
-      //voucher.tokenId,
-      //redeemer,
-      //signer,
-      //voucher.minPrice,
-      //voucher.uri,
-      //voucher.collection
-    //);
     
     // transfer the token to the redeemer
     _transfer(signer, redeemer, voucher.tokenId);

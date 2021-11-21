@@ -62,7 +62,7 @@ const PanelView: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<IMessageFormat[]>([]);
   //const ENDPOINT = "http://localhost:5000";
-  const ENDPOINT = "https://b91f-49-204-134-22.ngrok.io";
+  const ENDPOINT = "https://4fd0-49-204-114-39.ngrok.io";
 
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -123,6 +123,7 @@ const PanelView: React.FC = () => {
   };
 
   const handleChangeIndex = (index: number) => {
+    console.log(value);
     setValue(index);
   };
 
@@ -168,7 +169,7 @@ const PanelView: React.FC = () => {
         >
           <TabPanel value={value} index={0} dir={theme.direction}></TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
-            <UserNFT />
+            <UserNFT setMessage={setMessage} sendMessage={sendMessage} />
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
             <Box>
