@@ -6,9 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const VoucherSchema = new mongoose_1.default.Schema({
     voucher: {
-        uri: {
-            type: String,
+        tokenId: {
+            type: Number,
             required: true,
+            unique: true,
         },
         minPrice: {
             type: {
@@ -20,10 +21,13 @@ const VoucherSchema = new mongoose_1.default.Schema({
                 required: true,
             },
         },
-        tokenId: {
-            type: Number,
+        uri: {
+            type: String,
             required: true,
-            unique: true,
+        },
+        collection: {
+            type: String,
+            required: true,
         },
     },
     signature: {

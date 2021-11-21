@@ -232,45 +232,6 @@ describe("LazyNFT", function () {
     expect(await contract.availableToWithdraw()).to.equal(0);
   });
 
-  it("Should add 2 vouchers to the database", async function () {
-    const { contract, redeemerContract, redeemer, minter } = await deploy();
-
-    const lazyMinter = new LazyMinter({
-      contractAddress: contract.address,
-      signer: minter,
-    });
-
-    const numberToMint = 2;
-    let objToSend = [];
-
-    for (let i = 0; i < numberToMint; i++) {
-      const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
-      let tokenId = i + 1;
-      const collection = "meme";
-      const { voucher, signature } = await lazyMinter.createVoucher(
-        tokenId,
-        "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-        minPrice,
-        collection
-      );
-      objToSend.push({
-        voucher,
-        signature,
-        ipfs: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-        tokenId,
-      });
-    }
-
-    try {
-      const res = await axios.post("http://localhost:5000/addVoucher", {
-        data: objToSend,
-      });
-      console.log(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  });
-
   it("Should add 2 vouchers after fetching current tokenId", async function () {
     const { contract, redeemerContract, redeemer, minter } = await deploy();
 
@@ -287,11 +248,11 @@ describe("LazyNFT", function () {
     } catch (err) {
       console.log(err);
     }
-    console.log(currtokenId.data.currId);
+    //console.log(currtokenId.data.currId);
     const tokenId = currtokenId.data.currId + 1;
-    for (let i = tokenId; i <= tokenId + 2; i++) {
+    for (let i = tokenId; i < tokenId + 2; i++) {
       const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
-      let tokenId = i + 1;
+      let tokenId = i;
       const collection = "meme";
       const { voucher, signature } = await lazyMinter.createVoucher(
         tokenId,
@@ -311,9 +272,83 @@ describe("LazyNFT", function () {
       const res = await axios.post("http://localhost:5000/addVoucher", {
         data: objToSend,
       });
-      console.log(res.data);
     } catch (err) {
       console.log(err);
     }
+  });
+
+  it("Should add 1 voucher and redeem one and make get request for that wallet", async function () {
+    const { contract, redeemerContract, redeemer, minter } = await deploy();
+    const lazyMinter = new LazyMinter({
+      contractAddress: contract.address,
+      signer: minter,
+    });
+    const numberToMint = 2;
+    let objToSend = [];
+    //console.log(currtokenId.data.currId);
+    let currtokenId;
+    try {
+      currtokenId = await axios.get("http://localhost:5000/getCurrentId");
+    } catch (err) {
+      console.log(err);
+    }
+    //console.log(currtokenId.data.currId);
+    const tokenId = currtokenId.data.currId + 1;
+    for (let i = tokenId; i < tokenId + 2; i++) {
+      const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
+      let tokenId = i;
+      const collection = "meme";
+      const { voucher, signature } = await lazyMinter.createVoucher(
+        tokenId,
+        "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+        minPrice,
+        collection
+      );
+      objToSend.push({
+        voucher,
+        signature,
+        ipfs: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+        tokenId,
+      });
+    }
+
+    console.log("obj to send", objToSend);
+
+    try {
+      const res = await axios.post("http://localhost:5000/addVoucher", {
+        data: objToSend,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    let minPrice = ethers.constants.WeiPerEther;
+    await expect(
+      redeemerContract.redeem(
+        redeemer.address,
+        objToSend[0].voucher,
+        objToSend[0].signature,
+        {
+          value: objToSend[0].voucher.minPrice,
+        }
+      )
+    )
+      .to.emit(contract, "Transfer") // transfer from null address to minter
+      .withArgs(
+        "0x0000000000000000000000000000000000000000",
+        minter.address,
+        objToSend[0].voucher.tokenId
+      )
+      .and.to.emit(contract, "Transfer") // transfer from minter to redeemer
+      .withArgs(minter.address, redeemer.address, objToSend[0].voucher.tokenId);
+
+    const something = await redeemerContract.fetchNFTsOwned(redeemer.address);
+    console.log(something);
+
+    //await expect(
+    //redeemerContract.fetchNFTsOwned(
+    //redeemer.address
+    //)
+    //).to.emit()
   });
 });

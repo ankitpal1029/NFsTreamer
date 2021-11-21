@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import Voucher from "../models/voucher";
 
-const FetchCurrentId = async (req: Request, res: Response) => {
+const FetchCurrentId = async (_: any, res: Response) => {
   let currId;
   try {
     currId = await Voucher.countDocuments({});

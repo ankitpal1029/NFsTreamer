@@ -2,9 +2,10 @@ import mongoose from "mongoose";
 
 const VoucherSchema = new mongoose.Schema({
   voucher: {
-    uri: {
-      type: String,
+    tokenId: {
+      type: Number,
       required: true,
+      unique: true,
     },
     minPrice: {
       type: {
@@ -16,10 +17,13 @@ const VoucherSchema = new mongoose.Schema({
         required: true,
       },
     },
-    tokenId: {
-      type: Number,
+    uri: {
+      type: String,
       required: true,
-      unique: true,
+    },
+    collection: {
+      type: String,
+      required: true,
     },
   },
   signature: {

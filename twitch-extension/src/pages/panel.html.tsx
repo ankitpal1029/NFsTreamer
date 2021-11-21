@@ -1,18 +1,29 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import axios from "axios";
+import "./panel.html.css";
+import InfoBar from "../components/panel/infobar/infobar";
+import Input from "../components/panel/input/input";
+import Messages from "../components/panel/messages/messages";
+import { AppBar, Box, Tab, Tabs, Typography, useTheme } from "@mui/material";
 import SwipeableViews from "react-swipeable-views";
-import { useTheme } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-
 import RestoreIcon from "@mui/icons-material/Restore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatIcon from "@mui/icons-material/Chat";
-import RecentNFTs from "../components/panel/recent-nfts";
-import LiveChat from "../components/panel/live-chat";
-import MyNFTs from "../components/panel/my-nfts";
+import UserNFT from "../components/user-nft/user-nft";
+
+declare global {
+  interface Window {
+    Twitch: any;
+  }
+}
+
+interface IMessageFormat {
+  user: string;
+  text: string;
+}
+
+let socket: any;
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -20,6 +31,13 @@ interface TabPanelProps {
   index: number;
   value: number;
 }
+
+//function a11yProps(index: number) {
+//return {
+//id: `full-width-tab-${index}`,
+//"aria-controls": `full-width-tabpanel-${index}`,
+//};
+//}
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -29,85 +47,144 @@ function TabPanel(props: TabPanelProps) {
       role="tabpanel"
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
+      //aria-labelledby={`full-width-tab-${index}`}
+      className="w-full"
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ marginTop: 10 }}>{children}</Box>}
     </div>
   );
 }
 
-function a11yProps(index: number) {
-  return {
-    id: `full-width-tab-${index}`,
-    "aria-controls": `full-width-tabpanel-${index}`,
-  };
-}
+const PanelView: React.FC = () => {
+  const room = "something";
+  const [userId, setUserId] = useState("not on twitch");
+  const [message, setMessage] = useState<string>("");
+  const [messages, setMessages] = useState<IMessageFormat[]>([]);
+  //const ENDPOINT = "http://localhost:5000";
+  const ENDPOINT = "https://4fd0-49-204-114-39.ngrok.io";
 
-export default function PanelView() {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+
+  useEffect(() => {
+    if (window.Twitch) {
+      window.Twitch.ext.onAuthorized(function (auth: any) {
+        //window.Twitch.ext.rig.log(auth.userId);
+        //window.Twitch.ext.rig.log(io);
+        //console.log("bitch");
+
+        setUserId(auth.userId);
+
+        //window.Twitch.ext.rig.log("socket data", socket);
+      });
+    } else {
+      console.log("you're not on twitch or twitch rig");
+    }
+
+    socket = io(`${ENDPOINT}`, {
+      path: "/chat",
+    });
+    socket.emit("join", { name: userId, room }, (error: any) => {
+      if (error) {
+        alert(error);
+      }
+    });
+    //window.Twitch.ext.rig.log(socket);
+    //console.log("socket data", socket);
+    return () => {
+      socket.disconnect();
+      socket.off();
+    };
+  }, [ENDPOINT, userId]);
+
+  useEffect(() => {
+    socket.on(
+      "message",
+      (msg: IMessageFormat) => {
+        setMessages([...messages, msg]);
+      },
+      []
+    );
+  });
+
+  const sendMessage = (event: any) => {
+    event.preventDefault();
+    if (message) {
+      socket.emit("sendMessage", message, () => {
+        setMessage("");
+      });
+    }
+    console.log(message, messages);
+  };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   const handleChangeIndex = (index: number) => {
+    console.log(value);
     setValue(index);
   };
 
   return (
-    <Box sx={{ bgcolor: "background.paper", width: 320 }}>
-      <AppBar position="fixed">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="secondary"
-          textColor="inherit"
-          variant="scrollable"
-          scrollButtons="auto"
-          aria-label="full width tabs example"
+    <div className="outerContainer">
+      <div className="container">
+        {/*<InfoBar room={room} />*/}
+
+        <AppBar>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="secondary"
+            textColor="inherit"
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="full width tabs example"
+          >
+            <Tab
+              style={{ fontSize: "10px" }}
+              label="Recent NFTs"
+              //{...a11yProps(0)}
+              icon={<RestoreIcon />}
+            />
+            <Tab
+              style={{ fontSize: "10px" }}
+              label="My NFTs"
+              //{...a11yProps(1)}
+              icon={<FavoriteIcon />}
+            />
+            <Tab
+              style={{ fontSize: "10px" }}
+              label="Live Chat"
+              //{...a11yProps(2)}
+              icon={<ChatIcon />}
+            />
+          </Tabs>
+        </AppBar>
+        <SwipeableViews
+          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+          index={value}
+          onChangeIndex={handleChangeIndex}
         >
-          <Tab
-            style={{ fontSize: "10px" }}
-            label="Recent NFTs"
-            {...a11yProps(0)}
-            icon={<RestoreIcon />}
-          />
-          <Tab
-            style={{ fontSize: "10px" }}
-            label="My NFTs"
-            {...a11yProps(1)}
-            icon={<FavoriteIcon />}
-          />
-          <Tab
-            style={{ fontSize: "10px" }}
-            label="Live Chat"
-            {...a11yProps(2)}
-            icon={<ChatIcon />}
-          />
-        </Tabs>
-      </AppBar>
-      <SwipeableViews
-        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-        style={{ marginTop: "20%" }}
-      >
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          <RecentNFTs />
-        </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          <MyNFTs />
-        </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          <LiveChat />
-        </TabPanel>
-      </SwipeableViews>
-    </Box>
+          <TabPanel value={value} index={0} dir={theme.direction}></TabPanel>
+          <TabPanel value={value} index={1} dir={theme.direction}>
+            <UserNFT setMessage={setMessage} sendMessage={sendMessage} />
+          </TabPanel>
+          <TabPanel value={value} index={2} dir={theme.direction}>
+            <Box>
+              <Messages messages={messages} name={userId} />
+            </Box>
+            {/*<Input
+              message={message}
+              setMessage={setMessage}
+              sendMessage={sendMessage}
+              />*/}
+          </TabPanel>
+        </SwipeableViews>
+      </div>
+    </div>
   );
-}
+};
+
+export default PanelView;

@@ -3,6 +3,7 @@ import Voucher from "../models/voucher";
 
 const FetchAllVouchers = async (req: Request, res: Response) => {
   let allVoucher;
+  //console.log(req);
   try {
     allVoucher = await Voucher.find({});
   } catch (err) {
