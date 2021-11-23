@@ -13,12 +13,12 @@ const main = async () => {
   const app = express();
   const httpServer = createServer(app);
 
-  const { PORT, DB_CONNECTION, FRONTEND_CORS } = process.env;
+  const { PORT, DB_CONNECTION, FRONTEND_CORS, MARKETPLACE_CORS } = process.env;
 
   app.use(express.json());
   app.use(
     cors({
-      origin: FRONTEND_CORS,
+      origin: MARKETPLACE_CORS,
     })
   );
 
