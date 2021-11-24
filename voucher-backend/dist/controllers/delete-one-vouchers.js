@@ -9,7 +9,7 @@ const DeleteOneVoucher = async (req, res) => {
         console.log("in deleting one");
         console.log(res);
         console.log(req);
-        await voucher_1.default.deleteOne({ "tokenId": req.tokenId });
+        await voucher_1.default.updateOne({ "tokenId": req.tokenId }, { $set: { "redeemed": true } });
     }
     catch (err) {
         console.log(err);
