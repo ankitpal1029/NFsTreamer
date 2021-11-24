@@ -17,7 +17,7 @@ const main = async () => {
     const { PORT, DB_CONNECTION, FRONTEND_CORS, MARKETPLACE_CORS } = process.env;
     app.use(express_1.default.json());
     app.use((0, cors_1.default)({
-        origin: MARKETPLACE_CORS,
+        origin: [MARKETPLACE_CORS, FRONTEND_CORS],
     }));
     mongoose_1.default.connect(`${DB_CONNECTION}`, () => {
         console.log(`connected to db`);
@@ -25,7 +25,7 @@ const main = async () => {
     const io = new socket_io_1.Server(httpServer, {
         path: "/chat",
         cors: {
-            origin: FRONTEND_CORS,
+            origin: [FRONTEND_CORS, MARKETPLACE_CORS],
             methods: ["GET", "POST,"],
             credentials: false,
         },
