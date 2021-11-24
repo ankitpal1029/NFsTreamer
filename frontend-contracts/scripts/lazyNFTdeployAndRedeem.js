@@ -5,6 +5,12 @@ const { ethers } = require("hardhat");
 const axios = require("axios").default;
 
 async function main() {
+  try{
+    await axios.post("http://localhost:5000/deleteAll")
+  }
+  catch(err){
+    console.log("deleting",err)
+  }
   const [redeemer, minter, _] = await ethers.getSigners();
 
   const NFT = await ethers.getContractFactory("LazyNFT");
