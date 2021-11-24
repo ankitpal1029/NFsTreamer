@@ -15,7 +15,15 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import {red} from '@mui/material/colors';
 
-const dbURI="mongodb+srv://shri:shri@cluster0.qkphc.mongodb.net/voucher-db";
+const { expect } = require("chai");
+/*
+const chai = require("chai");
+const { solidity } = require("ethereum-waffle");
+chai.use(solidity);
+*/
+import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";    
+import { nftaddress, nftmarketaddress } from "../config";
+
 
 const PORT = 5000;
 
@@ -32,6 +40,64 @@ export class listVouchers extends Component {
         vouchers: response.data.allVoucher
       });
     }) 
+  }                         
+ 
+  async _redm(voucher,signature){
+    console.log("in redeem");
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const redeemer = provider.getSigner();
+    console.log("signers")                                  
+
+    let contract = new ethers.Contract(nftaddress, NFT.abi, redeemer); 
+    //const redeemerFactory = contract.connect(redeemer); 
+    
+    //const redeemerContract = redeemerFactory.attach(contract.address);
+    console.log("signers")
+    console.log(redeemer)
+    console.log("contract")
+    console.log(contract)
+    console.log("contract address")
+    console.log(contract.getAddress())
+    
+    //await contract.redeem(redeemer.getAddress(), voucher, signature);
+    await contract.fetchNFTsOwned(redeemer.getAddress())
+      //const something = await contract.fetchNFTsOwned(redeemer.getAddress());
+  //console.log("something", something);
+
+      /*
+      .to.emit(contract, "Transfer") // transfer from null address to minter
+      .withArgs(
+        "0x0000000000000000000000000000000000000000",
+        signer.address,
+        voucher.tokenId
+      )*/
+      //.and.to.emit(contract, "Transfer") // transfer from minter to redeemer
+      //.withArgs(signer.address, signer.address, voucher.tokenId);
+
+
+
+    /*
+
+  let factory = await ethers.getContractFactory("LazyNFT", minter);
+  const contract = await factory.deploy(minter.address);
+
+  // the redeemerContract is an instance of the contract that's wired up to the redeemer's signing key
+  const redeemerFactory = factory.connect(redeemer);
+
+  const redeemerContract = redeemerFactory.attach(contract.address);
+      await expect(redeemerContract.redeem(redeemer.address, voucher, signature))
+      .to.emit(contract, "Transfer") // transfer from null address to minter
+      .withArgs(
+        "0x0000000000000000000000000000000000000000",
+        minter.address,
+        voucher.tokenId
+      )
+      .and.to.emit(contract, "Transfer") // transfer from minter to redeemer
+      .withArgs(minter.address, redeemer.address, voucher.tokenId);
+
+    */
   }
   
   render() 
@@ -65,8 +131,8 @@ export class listVouchers extends Component {
                       Signature: {v.signature}
                     </CardContent>
                     <CardActions>
-                    <Button size="small" > 
-                      Buy
+                    <Button size="small" onClick={()=>this._redm(v.voucher,v.signature)}> 
+                      Redeem
                     </Button>
                     
                     </CardActions>
