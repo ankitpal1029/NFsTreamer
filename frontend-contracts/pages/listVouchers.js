@@ -42,6 +42,7 @@ const listVouchers = () => {
 
     const lazynftContract = new ethers.Contract(nftaddress, NFT.abi, signer);
 
+    try{
     const res = await lazynftContract.redeem(
       signer.getAddress(),
       voucher,
@@ -50,21 +51,20 @@ const listVouchers = () => {
         value: voucher.minPrice,
       }
     );
-      
     try{
       console.log("tryna delete")
       await axios.post("http://localhost:5000/deleteOne",{tokenId:voucher.tokenId}).then((res) => {
         console.log(res.data)
     })
-    
     }
     catch(err){
       console.log("delete one not working",err)
     }
-    
-    
+    }
+    catch(err){
+      console.log("redeem not working",err)
+    }
 
-    console.log(res)
     
     //console.log(await lazynftContract.fetchNFTsOwned(signer.getAddress()));
   };
