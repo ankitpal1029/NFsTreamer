@@ -50,7 +50,10 @@ const listVouchers = () => {
       {
         value: voucher.minPrice,
       }
+
     );
+    console.log(res)
+
     try{
       console.log("tryna delete")
       await axios.post("http://localhost:5000/deleteOne",{tokenId:voucher.tokenId}).then((res) => {

@@ -22,8 +22,7 @@ const singleVoucher = () => {
   const [vouchers, setVouchers] = useState([]);
 
   useEffect(() => {
-    console.log("gonna fetch!!!")  
-
+    console.log("gonna fetch!!!")   
     axios.post("http://localhost:5000/fetchSig",{signature:sign}).then((response) => {
     console.log(response);
     setVouchers([response.data]);
@@ -44,6 +43,8 @@ const singleVoucher = () => {
 
     const lazynftContract = new ethers.Contract(nftaddress, NFT.abi, signer);
 
+    
+    
     try{
       const res = await lazynftContract.redeem(
         signer.getAddress(),
@@ -53,6 +54,7 @@ const singleVoucher = () => {
           value: voucher.minPrice,
         }
       );
+      console.log(res)
       try{
         console.log("tryna delete")
         await axios.post("http://localhost:5000/deleteOne",{tokenId:voucher.tokenId}).then((res) => {
@@ -66,6 +68,10 @@ const singleVoucher = () => {
       catch(err){
         console.log("redeem not working",err)
       }
+      
+      console.log("nfts owned")
+      const nftsOwned = await lazynftContract.fetchNFTsOwned(signer.getAddress());
+      console.log(nftsOwned);
     
   };
 
