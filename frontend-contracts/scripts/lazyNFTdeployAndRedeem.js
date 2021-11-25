@@ -91,7 +91,6 @@ async function main() {
         value: minPrice,
       }
     );
-
     console.log(res);
   } catch (err) {
     console.log("error in contract call", err);

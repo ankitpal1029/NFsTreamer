@@ -57,26 +57,36 @@ const UserNFT = ({
   return (
     <div className="flex justify-center">
       <div className="p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {nfts.map((nft, i) => (
-            <div
-              key={i}
-              className="bg-black border rounded-xl overflow-hidden "
-              onClick={(event) => sendMessageToChat(event, nft.uri)}
-            >
-              <img
-                src={`https://ipfs.io/ipfs/${nft.uri.split("//")[1]}`}
-                alt="couldn't load ..."
-                className="rounded"
-              />
-              <div className="p-1 bg-black text-xs">
-                <p className="text-2xl font-bold text-white">
-                  Click for User Chat
-                </p>
+        {nfts.length ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+            {nfts.map((nft, i) => (
+              <div
+                key={i}
+                className="bg-black border rounded-xl overflow-hidden "
+                onClick={(event) => sendMessageToChat(event, nft.uri)}
+              >
+                <img
+                  src={`https://ipfs.io/ipfs/${nft.uri.split("//")[1]}`}
+                  alt="couldn't load ..."
+                  className="rounded"
+                />
+                <div className="p-1 bg-black text-xs">
+                  <p className="text-2xl font-bold text-white">
+                    Click for User Chat
+                  </p>
+                </div>
               </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-black border rounded-xl overflow-hidden ">
+            <div className="p-1 bg-black text-xs">
+              <p className="text-2xl font-bold text-white">
+                You don't own any NFTs
+              </p>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
