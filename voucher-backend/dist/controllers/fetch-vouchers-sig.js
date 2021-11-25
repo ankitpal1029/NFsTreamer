@@ -8,8 +8,9 @@ const FetchVouchersSig = async (req, res) => {
     let recievedData = req.query.signature;
     let response;
     try {
+        console.log("received", recievedData);
         response = await voucher_1.default.findOne({
-            signature: recievedData,
+            "voucher.signature": recievedData,
         });
     }
     catch (err) {

@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import { useState, Component, useEffect } from "react";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
@@ -9,25 +10,26 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 
-/*
-const chai = require("chai");
-const { solidity } = require("ethereum-waffle");
-chai.use(solidity);
-*/
-import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
-//import LazyNFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
-import { nftaddress } from "../newconfig";
 
-const listVouchers = () => {
+import NFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
+import { nftaddress } from "../../newconfig";
+
+const singleVoucher = () => {
+
+  const router = useRouter()
+  const { sign } = router.query    
+
   const [vouchers, setVouchers] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/fetchVouchers").then((response) => {
-      console.log(response);
-      setVouchers(response.data.allVoucher);
-      
+    console.log("gonna fetch!!!")  
+
+    axios.post("http://localhost:5000/fetchSig",{signature:sign}).then((response) => {
+    console.log(response);
+    setVouchers([response.data]);
     });
   }, []);
+
 
   const _redm = async (voucher, signature) => {
     console.log("redeem")
@@ -62,11 +64,8 @@ const listVouchers = () => {
       console.log("delete one not working",err)
     }
     
-    
-
     console.log(res)
     
-    //console.log(await lazynftContract.fetchNFTsOwned(signer.getAddress()));
   };
 
   return (
@@ -118,6 +117,8 @@ const listVouchers = () => {
       )}
     </div>
   );
+  
+ //return(<p>signature</p>);
 };
 
-export default listVouchers;
+export default singleVoucher;

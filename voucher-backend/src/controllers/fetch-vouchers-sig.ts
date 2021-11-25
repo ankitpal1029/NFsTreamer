@@ -6,8 +6,9 @@ const FetchVouchersSig = async (req: Request, res: Response) => {
 
   let response;
   try {
-    response = await Voucher.findOne({
-      signature: recievedData,
+    console.log("received",recievedData)
+    response = await Voucher.findOne({    
+      "voucher.signature": recievedData,            
     });
   } catch (err) {
     console.log(err);
