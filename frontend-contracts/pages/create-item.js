@@ -78,8 +78,7 @@ class LazyMinter {
   }
 }
 
-
-export default function CreateItem() {
+const CreateItem = ()=> {
 
   const [cid, setCid] = useState(null);
   const[IPFSurl,setIPFSurl] = useState(null);
@@ -269,3 +268,5 @@ const res = await axios.post("http://localhost:5000/addVoucher", {
     </div>
   );
 }
+
+export default CreateItem;
