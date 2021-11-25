@@ -1,20 +1,23 @@
-import { useState } from "react";
+import { useState,Component } from "react";
 import { ethers } from "ethers";
-import { create as ipfsHttpClient } from "ipfs-http-client";      
-import { useRouter } from "next/router";  
-import Web3Modal from "web3modal";  
-import { NFTStorage, Blob } from 'nft.storage'
-const { TypedDataUtils } = require("ethers-eip712");
-const SIGNING_DOMAIN_NAME = "LazyNFT-Voucher";
-const SIGNING_DOMAIN_VERSION = "1";
+import { create as ipfsHttpClient } from "ipfs-http-client";
+import { useRouter } from "next/router";
+import Web3Modal from "web3modal";
+import axios from 'axios';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import CardHeader from '@mui/material/CardHeader';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import {red} from '@mui/material/colors';
 
-import { nftaddress, nftmarketaddress } from "../config";
 
 import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";    
-//import Market from "../artifacts/contracts/LazyNFTMarket.sol/LazyNFTMarket.json";     
 
-const endpoint = 'https://api.nft.storage' // the default
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGMyODE0MmI4QTk1ZWU0NzJFQzhFYmZCZmFmYjNBMEJmMTJkODkxOUIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzNDczNjgzNTY4OCwibmFtZSI6InRlc3RpbmcifQ.rs8tUWt98e20_8G7vv9evNgtKDEhUNT-Q4pRbTk-ma0' // your API key from https://nft.storage/manage
 
 const axios = require("axios").default;
 
@@ -81,11 +84,11 @@ class LazyMinter {
 
 export default function CreateItem() {
 
-  const [cid, setCid] = useState(null);
-  const[IPFSurl,setIPFSurl] = useState(null);
-  const [file, setFile] = useState(null);
-  const [fileURL, setFileURL] = useState(null);
-  const [formInput, updateFormInput] = useState({
+  const [cid, setCid] = useState(null); 
+  const[IPFSurl,setIPFSurl] = useState(null); 
+  const [file, setFile] = useState(null); 
+  const [fileURL, setFileURL] = useState(null); 
+  const [formInput, updateFormInput] = useState({ 
     price: "",
     name: "",
     description: "",
@@ -134,7 +137,7 @@ export default function CreateItem() {
     const signer = provider.getSigner();
     console.log("signers")
 
-    let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
+    let contract = new ethers.Contract(nftaddress, NFT.abi, signer);  
 
 
     //the redeemerContract is an instance of the contract that's wired up to the redeemer's signing key

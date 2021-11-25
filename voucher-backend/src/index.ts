@@ -13,12 +13,12 @@ const main = async () => {
   const app = express();
   const httpServer = createServer(app);
 
-  const { PORT, DB_CONNECTION, FRONTEND_CORS } = process.env;
+  const { PORT, DB_CONNECTION, FRONTEND_CORS, MARKETPLACE_CORS } = process.env;
 
   app.use(express.json());
   app.use(
     cors({
-      origin: FRONTEND_CORS,
+      origin: [MARKETPLACE_CORS as string, FRONTEND_CORS as string],
     })
   );
 
@@ -31,7 +31,7 @@ const main = async () => {
   const io = new Server(httpServer, {
     path: "/chat",
     cors: {
-      origin: FRONTEND_CORS,
+      origin: [FRONTEND_CORS as string, MARKETPLACE_CORS as string],
       //origin: "https://localhost:8080",
       methods: ["GET", "POST,"],
       credentials: false,
