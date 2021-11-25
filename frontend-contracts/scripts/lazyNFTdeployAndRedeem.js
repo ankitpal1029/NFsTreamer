@@ -5,10 +5,11 @@ const { ethers } = require("hardhat");
 const axios = require("axios").default;
 
 async function main() {
-  try {
-    await axios.post("http://localhost:5000/deleteAll");
-  } catch (err) {
-    console.log("deleting", err);
+  try{
+    await axios.post("http://localhost:5000/deleteAll")
+  }
+  catch(err){
+    console.log("deleting",err)
   }
   const [redeemer, minter, _] = await ethers.getSigners();
 
@@ -81,7 +82,7 @@ async function main() {
   // redeem the first voucher
   const minPrice = await ethers.constants.WeiPerEther; // charge 1 Eth
 
-  /*  try {
+/*  try {
     const res = await nft.redeem(
       redeemer.address,
       vouchers.data.allVoucher[0].voucher,

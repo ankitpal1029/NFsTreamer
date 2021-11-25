@@ -142,4 +142,3 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
     return nftsOwned[_reqAddress];
   }
 }
-

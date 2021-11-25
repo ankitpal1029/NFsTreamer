@@ -14,7 +14,7 @@ class LazyMinter {
         { name: "name", type: "string" },
         { name: "version", type: "string" },
         { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },
+        { name: "verifyingContract", type: "address" },         
       ],
       NFTVoucher: [
         { name: "tokenId", type: "uint256" },
