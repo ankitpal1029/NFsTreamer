@@ -82,7 +82,7 @@ async function main() {
   // redeem the first voucher
   const minPrice = await ethers.constants.WeiPerEther; // charge 1 Eth
 
-  try {
+/*  try {
     const res = await nft.redeem(
       redeemer.address,
       vouchers.data.allVoucher[0].voucher,
@@ -96,9 +96,10 @@ async function main() {
   } catch (err) {
     console.log("error in contract call", err);
   }
-
+  
   const something = await nft.fetchNFTsOwned(redeemer.address);
   console.log("something", something);
+  */
 }
 
 try {
