@@ -11,6 +11,7 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatIcon from "@mui/icons-material/Chat";
 import UserNFT from "../components/user-nft/user-nft";
+import AvailableNFTs from "../components/available-nfts/available-nfts";
 
 declare global {
   interface Window {
@@ -62,7 +63,7 @@ const PanelView: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<IMessageFormat[]>([]);
   //const ENDPOINT = "http://localhost:5000";
-  const ENDPOINT = "https://4fd0-49-204-114-39.ngrok.io";
+  const ENDPOINT = "https://dbe9-49-204-138-230.ngrok.io";
 
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -167,7 +168,9 @@ const PanelView: React.FC = () => {
           index={value}
           onChangeIndex={handleChangeIndex}
         >
-          <TabPanel value={value} index={0} dir={theme.direction}></TabPanel>
+          <TabPanel value={value} index={0} dir={theme.direction}>
+            <AvailableNFTs />
+          </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             <UserNFT setMessage={setMessage} sendMessage={sendMessage} />
           </TabPanel>

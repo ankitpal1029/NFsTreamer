@@ -5,6 +5,11 @@ const { ethers } = require("hardhat");
 const axios = require("axios").default;
 
 async function main() {
+  try {
+    await axios.post("http://localhost:5000/deleteAll");
+  } catch (err) {
+    console.log("deleting", err);
+  }
   const [redeemer, minter, _] = await ethers.getSigners();
 
   const NFT = await ethers.getContractFactory("LazyNFT");
@@ -76,7 +81,7 @@ async function main() {
   // redeem the first voucher
   const minPrice = await ethers.constants.WeiPerEther; // charge 1 Eth
 
-  try {
+  /*  try {
     const res = await nft.redeem(
       redeemer.address,
       vouchers.data.allVoucher[0].voucher,
@@ -85,14 +90,14 @@ async function main() {
         value: minPrice,
       }
     );
-
     console.log(res);
   } catch (err) {
     console.log("error in contract call", err);
   }
-
+  
   const something = await nft.fetchNFTsOwned(redeemer.address);
   console.log("something", something);
+  */
 }
 
 try {
