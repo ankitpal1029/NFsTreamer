@@ -60,7 +60,7 @@ async function main() {
     });
   }
 
-  console.log("obj to send", objToSend);
+  //console.log("obj to send", objToSend);
 
   try {
     const res = await axios.post("http://localhost:5000/addVoucher", {
@@ -77,7 +77,7 @@ async function main() {
     console.log("some error bitch", err);
   }
 
-  console.log(vouchers.data.allVoucher[0]);
+  //console.log(vouchers.data.allVoucher[0]);
 
   // redeem the first voucher
   const minPrice = await ethers.constants.WeiPerEther; // charge 1 Eth

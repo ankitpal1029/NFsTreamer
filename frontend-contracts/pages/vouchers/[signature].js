@@ -69,9 +69,9 @@ const singleVoucher = () => {
         console.log("redeem not working",err)
       }
       
-      console.log("nfts owned")
-      const nftsOwned = await lazynftContract.fetchNFTsOwned(signer.getAddress());
-      console.log(nftsOwned);
+      //console.log("nfts owned")
+      //const nftsOwned = await lazynftContract.fetchNFTsOwned(signer.getAddress());
+      //console.log(nftsOwned);
     
   };
 

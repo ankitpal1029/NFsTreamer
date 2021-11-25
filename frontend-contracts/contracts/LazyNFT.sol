@@ -51,7 +51,6 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
     string collection;
   }
 
-
   /// @notice Redeems an NFTVoucher for an actual NFT, creating it in the process.
   /// @param redeemer The address of the account which will receive the NFT upon success.
   /// @param voucher An NFTVoucher that describes the NFT to be redeemed.
