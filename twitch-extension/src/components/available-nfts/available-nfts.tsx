@@ -22,7 +22,7 @@ const AvailableNFTs = () => {
   const loadNFTs = async () => {
     try {
       const response = await axios.get(
-        "https://dbe9-49-204-138-230.ngrok.io/fetchVouchers"
+        "https://4a83-49-205-80-141.ngrok.io/fetchVouchers"
       );
       setNFTs(response.data.allVoucher);
       console.log(response.data.allVoucher);
@@ -42,7 +42,7 @@ const AvailableNFTs = () => {
                 key={i}
                 className="bg-black border rounded-xl overflow-hidden "
                 onClick={() =>
-                  window.open(`http://localhost:3000/${nft.signature}`)
+                  window.open(`http://localhost:3000/vouchers/${nft.signature}`)
                 }
               >
                 <img
