@@ -7,8 +7,7 @@ import axios from "axios";
 
 import { nftaddress, nftmarketaddress } from "../config";
 
-import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
-import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
+import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 
 export default function MyAsset() {
   const [nfts, setNFTs] = useState([]);
@@ -18,7 +17,7 @@ export default function MyAsset() {
     loadNFTs();
   }, []);
 
-  async function loadNFTs() {
+  const loadNFTs = async () => {
     const web3Modal = new Web3Modal({
       network: "mainnet",
       cacheProvider: true,
@@ -27,30 +26,12 @@ export default function MyAsset() {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    const marketContract = new ethers.Contract(
-      nftmarketaddress,
-      Market.abi,
-      signer
-    );
-    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
-    const data = await marketContract.fetchMyNFTs();
 
-    const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-        let item = {
-          price,
-          tokenId: i.tokenId.toNumber(),
-          seller: i.seller,
-          owner: i.owner,
-          image: meta.data.image,
-        };
-        return item;
-      })
-    );
-    setNFTs(items);
+    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
+    const nftsOwned = await tokenContract.fetchNFTsOwned(signer.getAddress());
+
+
+    //setNFTs(items);
     setLoadingState("loaded");
   }
   if (loadingState === "loaded" && !nfts.length)

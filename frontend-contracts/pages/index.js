@@ -1,102 +1,126 @@
+import { useState, Component, useEffect } from "react";
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import Web3Modal from "web3modal";
+import axios from "axios";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
+import CardHeader from "@mui/material/CardHeader";
 
-import { nftaddress, nftmarketaddress } from "../config";
+/*
+const chai = require("chai");
+const { solidity } = require("ethereum-waffle");
+chai.use(solidity);
+*/
+import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
+//import LazyNFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
+import { nftaddress } from "../newconfig";
 
-import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
-import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
+const listVouchers = () => {
+  const [vouchers, setVouchers] = useState([]);
 
-export default function Home() {
-  const [nfts, setNfts] = useState([]);
-  const [loadingState, setLoadingState] = useState("not-loaded");
   useEffect(() => {
-    loadNFTs();
+    axios.get("http://localhost:5000/fetchVouchers").then((response) => {
+      console.log(response);
+      setVouchers(response.data.allVoucher);
+      
+    });
   }, []);
-  async function loadNFTs() {
-    const provider = new ethers.providers.JsonRpcProvider();
-    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
-    const marketContract = new ethers.Contract(
-      nftmarketaddress,
-      Market.abi,
-      provider
-    );
-    const data = await marketContract.fetchMarketItems();
 
-    const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-        let item = {
-          price,
-          tokenId: i.tokenId.toNumber(),
-          seller: i.seller,
-          owner: i.owner,
-          image: meta.data.image,
-          name: meta.data.name,
-          description: meta.data.description,
-        };
-        return item;
-      })
-    );
-    setNfts(items);
-    setLoadingState("loaded");
-  }
-  async function buyNft(nft) {
-    const web3Modal = new Web3Modal();
+  const _redm = async (voucher, signature) => {
+    console.log("redeem")
+    const web3Modal = new Web3Modal({
+      network: "mainnet",
+      cacheProvider: true,
+    });
+
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
 
-    const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
-    const transaction = await contract.createMarketSale(
-      nftaddress,
-      nft.tokenId,
+    const lazynftContract = new ethers.Contract(nftaddress, NFT.abi, signer);
+
+    try{
+    const res = await lazynftContract.redeem(
+      signer.getAddress(),
+      voucher,
+      signature,
       {
-        value: price,
+        value: voucher.minPrice,
       }
+
     );
-    await transaction.wait();
-    loadNFTs();
-  }
-  if (loadingState === "loaded" && !nfts.length)
-    return <h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>;
+    console.log(res)
+
+    try{
+      console.log("tryna delete")
+      await axios.post("http://localhost:5000/deleteOne",{tokenId:voucher.tokenId}).then((res) => {
+        console.log(res.data)
+    })
+    }
+    catch(err){
+      console.log("delete one not working",err)
+    }
+    }
+    catch(err){
+      console.log("redeem not working",err)
+    }
+
+    
+    //console.log(await lazynftContract.fetchNFTsOwned(signer.getAddress()));
+  };
+
   return (
-    <div className="flex justify-center">
-      <div className="px-4" style={{ maxWidth: "1600px" }}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {nfts.map((nft, i) => (
-            <div key={i} className="border shadow rounded-xl overflow-hidden">
-              <img src={nft.image} />
-              <div className="p-4">
-                <p
-                  style={{ height: "64px" }}
-                  className="text-2xl font-semibold"
+    <div className="m-4">
+      {vouchers.length ? (
+        <div className="grid grid-cols-3 gap-4">
+          {vouchers.map((v, index) => {
+            if (!v.redeemed){
+            return (
+              <div
+                className=""
+                //style={{ padding: "10px" }}
+                key={index}
                 >
-                  {nft.name}
-                </p>
-                <div style={{ height: "70px", overflow: "hidden" }}>
-                  <p className="text-gray-400">{nft.description}</p>
-                </div>
+                <Card sx={{ maxWidth: 345 }} variant="outlined">
+                  <CardHeader
+                    title="Banksy"
+                    subheader={v.voucher.collection + " collection"}
+                  />
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    //image={"https://ipfs.io/ipfs/" + v.voucher.uri}
+                    image={"https://ipfs.io/ipfs/"+v.voucher.uri.split("//")[1]}
+                  />
+
+                  <CardContent>
+                    Price:{" "}
+                    {parseInt(v.voucher.minPrice.hex, 16) / Math.pow(10, 18)}{" "}
+                    ETH
+                  </CardContent>
+                  <CardContent>Signature: {v.signature}</CardContent>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      onClick={() => _redm(v.voucher, v.signature)}
+                    >
+                      Redeem
+                    </Button>
+                  </CardActions>
+                </Card>
               </div>
-              <div className="p-4 bg-black">
-                <p className="text-2xl mb-4 font-bold text-white">
-                  {nft.price} ETH
-                </p>
-                <button
-                  className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
-                  onClick={() => buyNft(nft)}
-                >
-                  Buy
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          }
+          })}
         </div>
-      </div>
+      ) : (
+        <div> No posts!!</div>
+      )}
     </div>
   );
-}
+};
+
+export default listVouchers;

@@ -133,10 +133,10 @@ const createSale= async (url,name,desc,price) => {
     cacheProvider: true,
   });
 
-  const connection = await web3Modal.connect();
-  const provider = new ethers.providers.Web3Provider(connection);
+  const connection = await web3Modal.connect();         
+  const provider = new ethers.providers.Web3Provider(connection);         
   const signer = provider.getSigner();
-
+ 
   let response = await axios.get("http://localhost:5000/getCurrentId")
 
   //let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
@@ -151,11 +151,11 @@ const createSale= async (url,name,desc,price) => {
   });
 
   //const minPrice = ethers.constants.WeiPerEther; 
-
+  //ethers.BigNumber.from(price)
   const {voucher,signature} = await lazyMinter.createVoucher(
   tokenID,
-  url,
-  ethers.BigNumber.from(price),
+  "ipfs://"+url,
+  ethers.utils.parseEther(price),
   1,
   name
   )

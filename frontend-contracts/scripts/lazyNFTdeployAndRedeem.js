@@ -16,7 +16,9 @@ async function main() {
   const NFT = await ethers.getContractFactory("LazyNFT");
   const nft = await NFT.deploy(minter.address);
   await nft.deployed();
+  console.log("redeemer:",redeemer.address);
   console.log("LazyNFT deployed to:", nft.address);
+  console.log("minter:", minter.address);
 
   let config = `
   export const nftaddress = "${nft.address}"
