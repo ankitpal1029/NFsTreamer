@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "hardhat/console.sol";
 
 contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
   using ECDSA for bytes32;
@@ -58,6 +59,8 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
   function redeem(address redeemer, NFTVoucher calldata voucher, bytes memory signature) public payable returns (uint256) {
     // make sure signature is valid and get the address of the signer
     address signer = _verify(voucher, signature);
+
+    console.log(signer);
 
     // make sure that the signer is authorized to mint NFTs
     require(hasRole(MINTER_ROLE, signer), "Signature invalid or unauthorized");
@@ -138,6 +141,7 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
   }
 
   function fetchNFTsOwned(address _reqAddress) public view returns (MarketItem[] memory){
+    console.log(_reqAddress);
     return nftsOwned[_reqAddress];
   }
 }

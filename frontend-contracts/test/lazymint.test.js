@@ -37,6 +37,8 @@ describe("LazyNFT", function () {
   it("Should redeem an NFT from a signed voucher", async function () {
     const { contract, redeemerContract, redeemer, minter } = await deploy();
 
+    console.log("minter", minter);
+
     const lazyMinter = new LazyMinter({
       contractAddress: contract.address,
       signer: minter,

@@ -9,12 +9,14 @@ class LazyMinter {
     this.contractAddress = contractAddress;
     this.signer = signer;
 
+    console.log(signer);
+
     this.types = {
       EIP712Domain: [
         { name: "name", type: "string" },
         { name: "version", type: "string" },
         { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },         
+        { name: "verifyingContract", type: "address" },
       ],
       NFTVoucher: [
         { name: "tokenId", type: "uint256" },

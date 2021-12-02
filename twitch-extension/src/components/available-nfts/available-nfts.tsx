@@ -22,7 +22,7 @@ const AvailableNFTs = () => {
   const loadNFTs = async () => {
     try {
       const response = await axios.get(
-        "https://4a83-49-205-80-141.ngrok.io/fetchVouchers"
+        "https://0330-49-204-131-83.ngrok.io/fetchVouchers"
       );
       setNFTs(response.data.allVoucher);
       console.log(response.data.allVoucher);
