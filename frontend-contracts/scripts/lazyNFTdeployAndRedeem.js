@@ -10,7 +10,7 @@ async function main() {
   } catch (err) {
     console.log("deleting", err);
   }
-  const [redeemer, minter, _] = await ethers.getSigners();
+  const [a, redeemer, minter, _] = await ethers.getSigners();
 
   const NFT = await ethers.getContractFactory("LazyNFT");
   const nft = await NFT.deploy(minter.address);
@@ -60,24 +60,27 @@ async function main() {
     });
   }
 
-  for (let i = tokenId + 1; i < tokenId + 2; i++) {
-    const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
-    let tokenId = i;
-    const collection = "meme";
-    const { voucher, signature } = await lazyMinter.createVoucher(
-      tokenId,
-      "ipfs://bafkreicguici2ysirkeygac5wbop2ptytcdgmippdqal2okoe4m5fn5h3y",
-      minPrice,
-      collection
-    );
-    objToSend.push({
-      voucher,
-      signature,
-      ipfs: "ipfs://bafkreicguici2ysirkeygac5wbop2ptytcdgmippdqal2okoe4m5fn5h3y",
-      tokenId,
-    });
-  }
-  console.log("obj to send", objToSend);
+  //for (let i = tokenId + 1; i < tokenId + 2; i++) {
+  //const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
+  //let tokenId = i;
+  //const collection = "meme";
+  //const { voucher, signature } = await lazyMinter.createVoucher(
+  //tokenId,
+  //"ipfs://bafkreicguici2ysirkeygac5wbop2ptytcdgmippdqal2okoe4m5fn5h3y",
+  //minPrice,
+  //collection
+  //);
+  //console.log("checking this on deploy ");
+  //console.log("voucher:", voucher);
+  //console.log("signature:", signature);
+  //objToSend.push({
+  //voucher,
+  //signature,
+  //ipfs: "ipfs://bafkreicguici2ysirkeygac5wbop2ptytcdgmippdqal2okoe4m5fn5h3y",
+  //tokenId,
+  //});
+  //}
+  //console.log("obj to send", objToSend);
 
   try {
     const res = await axios.post("http://localhost:5000/addVoucher", {
@@ -87,14 +90,14 @@ async function main() {
     console.log(err);
   }
 
-  //let vouchers;
-  //try {
-  //vouchers = await axios.get("http://localhost:5000/fetchVouchers");
-  //} catch (err) {
-  //console.log("some error bitch", err);
-  //}
+  let vouchers;
+  try {
+    vouchers = await axios.get("http://localhost:5000/fetchVouchers");
+  } catch (err) {
+    console.log("some error bitch", err);
+  }
 
-  //console.log(vouchers.data.allVoucher[0]);
+  console.log(vouchers.data.allVoucher[0]);
 
   //redeem the first voucher
   //const minPrice = await ethers.constants.WeiPerEther; // charge 1 Eth

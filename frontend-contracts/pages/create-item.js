@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
 const { LazyMinter } = require("../lib");
 
-import { nftaddress, nftmarketaddress } from "../config";
+import { nftaddress, nftmarketaddress } from "../newconfig";
 
 //import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 //import Market from "../artifacts/contracts/LazyNFTMarket.sol/LazyNFTMarket.json";
@@ -69,8 +69,6 @@ const CreateItem = () => {
 
     let response = await axios.get("http://localhost:5000/getCurrentId");
 
-    //let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
-
     console.log(response.data);
     let tokenID = response.data.currId + 1;
 
@@ -80,36 +78,31 @@ const CreateItem = () => {
       signer: signer,
     });
 
-    //const minPrice = ethers.constants.WeiPerEther;
-    //ethers.BigNumber.from(price)
-    const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
-    const collection = "meme";
-    console.log(ethers.utils.parseEther(price));
+    let objToSend = [];
+    const bigPrice = ethers.utils.parseUnits(price.toString(), "ether");
     const { voucher, signature } = await lazyMinter.createVoucher(
       tokenID,
-      //"ipfs://" + cid,
-      //"ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-      //ethers.utils.parseEther(price),
-      "ipfs://" + cid,
-      minPrice,
-      collection
+      `ipfs://${cid}`,
+      bigPrice,
+      name
     );
-
-    let objToSend = [];
+    console.log("checking this on deploy ");
+    console.log("voucher:", voucher);
+    console.log("signature:", signature);
     objToSend.push({
       voucher,
       signature,
-      ipfs: `ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi`,
-      tokenId: tokenID,
+      ipfs: `ipfs://${cid}`,
+      tokenID,
     });
 
-    console.log(objToSend);
-
-    const res = await axios.post("http://localhost:5000/addVoucher", {
-      data: objToSend,
-    });
-    console.log("sent to db!!!");
-    console.log(res.data);
+    try {
+      const res = await axios.post("http://localhost:5000/addVoucher", {
+        data: objToSend,
+      });
+    } catch (err) {
+      console.log(err);
+    }
 
     router.push("/");
   };

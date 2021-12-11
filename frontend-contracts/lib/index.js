@@ -9,8 +9,6 @@ class LazyMinter {
     this.contractAddress = contractAddress;
     this.signer = signer;
 
-    console.log(signer);
-
     this.types = {
       EIP712Domain: [
         { name: "name", type: "string" },
@@ -56,6 +54,11 @@ class LazyMinter {
     const typedData = await this._formatVoucher(voucher);
     const digest = TypedDataUtils.encodeDigest(typedData);
     const signature = await this.signer.signMessage(digest);
+    console.log("===============================");
+    console.log("typedData:", typedData);
+    console.log("digest:", digest);
+    console.log("signature:", signature);
+    console.log("==========================");
     return {
       voucher,
       signature,

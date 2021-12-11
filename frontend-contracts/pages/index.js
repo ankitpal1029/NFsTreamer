@@ -25,12 +25,11 @@ const listVouchers = () => {
     axios.get("http://localhost:5000/fetchVouchers").then((response) => {
       console.log(response);
       setVouchers(response.data.allVoucher);
-      
     });
   }, []);
 
   const _redm = async (voucher, signature) => {
-    console.log("redeem")
+    console.log("redeem");
     const web3Modal = new Web3Modal({
       network: "mainnet",
       cacheProvider: true,
@@ -42,33 +41,31 @@ const listVouchers = () => {
 
     const lazynftContract = new ethers.Contract(nftaddress, NFT.abi, signer);
 
-    try{
-    const res = await lazynftContract.redeem(
-      signer.getAddress(),
-      voucher,
-      signature,
-      {
-        value: voucher.minPrice,
+    try {
+      const res = await lazynftContract.redeem(
+        signer.getAddress(),
+        voucher,
+        signature,
+        {
+          value: voucher.minPrice,
+        }
+      );
+      console.log(res);
+
+      try {
+        console.log("tryna delete");
+        await axios
+          .post("http://localhost:5000/deleteOne", { tokenId: voucher.tokenId })
+          .then((res) => {
+            console.log(res.data);
+          });
+      } catch (err) {
+        console.log("delete one not working", err);
       }
-
-    );
-    console.log(res)
-
-    try{
-      console.log("tryna delete")
-      await axios.post("http://localhost:5000/deleteOne",{tokenId:voucher.tokenId}).then((res) => {
-        console.log(res.data)
-    })
-    }
-    catch(err){
-      console.log("delete one not working",err)
-    }
-    }
-    catch(err){
-      console.log("redeem not working",err)
+    } catch (err) {
+      console.log("redeem not working", err);
     }
 
-    
     //console.log(await lazynftContract.fetchNFTsOwned(signer.getAddress()));
   };
 
@@ -77,43 +74,44 @@ const listVouchers = () => {
       {vouchers.length ? (
         <div className="grid grid-cols-3 gap-4">
           {vouchers.map((v, index) => {
-            if (!v.redeemed){
-            return (
-              <div
-                className=""
-                //style={{ padding: "10px" }}
-                key={index}
+            if (!v.redeemed) {
+              return (
+                <div
+                  className=""
+                  //style={{ padding: "10px" }}
+                  key={index}
                 >
-                <Card sx={{ maxWidth: 345 }} variant="outlined">
-                  <CardHeader
-                    title="Banksy"
-                    subheader={v.voucher.collection + " collection"}
-                  />
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    //image={"https://ipfs.io/ipfs/" + v.voucher.uri}
-                    image={"https://ipfs.io/ipfs/"+v.voucher.uri.split("//")[1]}
-                  />
+                  <Card sx={{ maxWidth: 345 }} variant="outlined">
+                    <CardHeader
+                      title="Banksy"
+                      subheader={v.voucher.collection + " collection"}
+                    />
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={
+                        "https://ipfs.io/ipfs/" + v.voucher.uri.split("//")[1]
+                      }
+                    />
 
-                  <CardContent>
-                    Price:{" "}
-                    {parseInt(v.voucher.minPrice.hex, 16) / Math.pow(10, 18)}{" "}
-                    ETH
-                  </CardContent>
-                  <CardContent>Signature: {v.signature}</CardContent>
-                  <CardActions>
-                    <Button
-                      size="small"
-                      onClick={() => _redm(v.voucher, v.signature)}
-                    >
-                      Redeem
-                    </Button>
-                  </CardActions>
-                </Card>
-              </div>
-            );
-          }
+                    <CardContent>
+                      Price:{" "}
+                      {parseInt(v.voucher.minPrice.hex, 16) / Math.pow(10, 18)}{" "}
+                      ETH
+                    </CardContent>
+                    <CardContent>Signature: {v.signature}</CardContent>
+                    <CardActions>
+                      <Button
+                        size="small"
+                        onClick={() => _redm(v.voucher, v.signature)}
+                      >
+                        Redeem
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </div>
+              );
+            }
           })}
         </div>
       ) : (
