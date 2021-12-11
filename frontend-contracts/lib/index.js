@@ -14,7 +14,7 @@ class LazyMinter {
         { name: "name", type: "string" },
         { name: "version", type: "string" },
         { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },         
+        { name: "verifyingContract", type: "address" },
       ],
       NFTVoucher: [
         { name: "tokenId", type: "uint256" },
@@ -54,6 +54,11 @@ class LazyMinter {
     const typedData = await this._formatVoucher(voucher);
     const digest = TypedDataUtils.encodeDigest(typedData);
     const signature = await this.signer.signMessage(digest);
+    console.log("===============================");
+    console.log("typedData:", typedData);
+    console.log("digest:", digest);
+    console.log("signature:", signature);
+    console.log("==========================");
     return {
       voucher,
       signature,

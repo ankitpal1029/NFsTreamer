@@ -46,7 +46,7 @@ const UserNFT = ({
     console.log(lazynftContract);
 
     const nftsOwned = await lazynftContract.fetchNFTsOwned(signer.getAddress());
-    console.log(nftsOwned[0]);
+    console.log("nfts owned", nftsOwned[0]);
     setNFTs(nftsOwned);
   };
 
