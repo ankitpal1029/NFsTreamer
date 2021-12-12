@@ -18,7 +18,7 @@ async function main() {
   `;
 
   let data = JSON.stringify(config);
-  fs.writeFileSync("config.js", JSON.parse(data));
+  fs.writeFileSync("newconfig.js", JSON.parse(data));
 }
 
 try {
