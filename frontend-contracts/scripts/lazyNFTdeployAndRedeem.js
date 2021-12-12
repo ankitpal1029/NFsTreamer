@@ -6,7 +6,7 @@ const axios = require("axios").default;
 
 async function main() {
   try {
-    await axios.post("http://localhost:5000/deleteAll");
+    await axios.post("https://nft-streamer-backend.herokuapp.com/deleteAll");
   } catch (err) {
     console.log("deleting", err);
   }
@@ -36,7 +36,9 @@ async function main() {
   let objToSend = [];
   let currtokenId;
   try {
-    currtokenId = await axios.get("http://localhost:5000/getCurrentId");
+    currtokenId = await axios.get(
+      "https://nft-streamer-backend.herokuapp.com/getCurrentId"
+    );
   } catch (err) {
     console.log(err);
   }
@@ -83,16 +85,21 @@ async function main() {
   //console.log("obj to send", objToSend);
 
   try {
-    const res = await axios.post("http://localhost:5000/addVoucher", {
-      data: objToSend,
-    });
+    const res = await axios.post(
+      "https://nft-streamer-backend.herokuapp.com/addVoucher",
+      {
+        data: objToSend,
+      }
+    );
   } catch (err) {
     console.log(err);
   }
 
   let vouchers;
   try {
-    vouchers = await axios.get("http://localhost:5000/fetchVouchers");
+    vouchers = await axios.get(
+      "https://nft-streamer-backend.herokuapp.com/fetchVouchers"
+    );
   } catch (err) {
     console.log("some error bitch", err);
   }

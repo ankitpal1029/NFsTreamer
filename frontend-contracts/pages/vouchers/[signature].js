@@ -23,7 +23,7 @@ const singleVoucher = () => {
   useEffect(() => {
     console.log("gonna fetch!!!");
     axios
-      .post("http://localhost:5000/fetchSig", {
+      .post("https://nft-streamer-backend.herokuapp.com/fetchSig", {
         signature: router.query.signature,
       })
       .then((response) => {

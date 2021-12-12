@@ -67,7 +67,9 @@ const CreateItem = () => {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    let response = await axios.get("http://localhost:5000/getCurrentId");
+    let response = await axios.get(
+      "https://nft-streamer-backend.herokuapp.com/getCurrentId"
+    );
 
     console.log(response.data);
     let tokenID = response.data.currId + 1;
@@ -97,9 +99,12 @@ const CreateItem = () => {
     });
 
     try {
-      const res = await axios.post("http://localhost:5000/addVoucher", {
-        data: objToSend,
-      });
+      const res = await axios.post(
+        "https://nft-streamer-backend.herokuapp.com/addVoucher",
+        {
+          data: objToSend,
+        }
+      );
     } catch (err) {
       console.log(err);
     }

@@ -246,7 +246,9 @@ describe("LazyNFT", function () {
 
     let currtokenId;
     try {
-      currtokenId = await axios.get("http://localhost:5000/getCurrentId");
+      currtokenId = await axios.get(
+        "https://nft-streamer-backend.herokuapp.com/getCurrentId"
+      );
     } catch (err) {
       console.log(err);
     }
@@ -271,9 +273,12 @@ describe("LazyNFT", function () {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/addVoucher", {
-        data: objToSend,
-      });
+      const res = await axios.post(
+        "https://nft-streamer-backend.herokuapp.com/addVoucher",
+        {
+          data: objToSend,
+        }
+      );
     } catch (err) {
       console.log(err);
     }
@@ -290,7 +295,9 @@ describe("LazyNFT", function () {
     //console.log(currtokenId.data.currId);
     let currtokenId;
     try {
-      currtokenId = await axios.get("http://localhost:5000/getCurrentId");
+      currtokenId = await axios.get(
+        "https://nft-streamer-backend.herokuapp.com/getCurrentId"
+      );
     } catch (err) {
       console.log(err);
     }
@@ -317,9 +324,12 @@ describe("LazyNFT", function () {
     console.log("obj to send", objToSend);
 
     try {
-      const res = await axios.post("http://localhost:5000/addVoucher", {
-        data: objToSend,
-      });
+      const res = await axios.post(
+        "https://nft-streamer-backend.herokuapp.com/addVoucher",
+        {
+          data: objToSend,
+        }
+      );
     } catch (err) {
       console.log(err);
     }

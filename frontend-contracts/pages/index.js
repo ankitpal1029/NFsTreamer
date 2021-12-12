@@ -22,10 +22,12 @@ const listVouchers = () => {
   const [vouchers, setVouchers] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/fetchVouchers").then((response) => {
-      console.log(response);
-      setVouchers(response.data.allVoucher);
-    });
+    axios
+      .get("https://nft-streamer-backend.herokuapp.com/fetchVouchers")
+      .then((response) => {
+        console.log(response);
+        setVouchers(response.data.allVoucher);
+      });
   }, []);
 
   const _redm = async (voucher, signature) => {
@@ -55,7 +57,9 @@ const listVouchers = () => {
       try {
         console.log("tryna delete");
         await axios
-          .post("http://localhost:5000/deleteOne", { tokenId: voucher.tokenId })
+          .post("https://nft-streamer-backend.herokuapp.com/deleteOne", {
+            tokenId: voucher.tokenId,
+          })
           .then((res) => {
             console.log(res.data);
           });
