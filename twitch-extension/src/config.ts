@@ -1,1 +1,1 @@
-export const lazynftaddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const lazynftaddress = "0x96661790622a98F72246178c545C19A675e1aB10";
