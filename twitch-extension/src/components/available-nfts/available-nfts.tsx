@@ -22,7 +22,7 @@ const AvailableNFTs = () => {
   const loadNFTs = async () => {
     try {
       const response = await axios.get(
-        "https://0330-49-204-131-83.ngrok.io/fetchVouchers"
+        "https://nft-streamer-backend.herokuapp.com/fetchVouchers"
       );
       setNFTs(response.data.allVoucher);
       console.log(response.data.allVoucher);
@@ -42,7 +42,9 @@ const AvailableNFTs = () => {
                 key={i}
                 className="bg-black border rounded-xl overflow-hidden "
                 onClick={() =>
-                  window.open(`http://localhost:3000/vouchers/${nft.signature}`)
+                  window.open(
+                    `https://nft-streamer-marketplace.netlify.app/vouchers/${nft.signature}`
+                  )
                 }
               >
                 <img

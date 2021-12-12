@@ -58,7 +58,9 @@ const singleVoucher = () => {
       try {
         console.log("tryna delete");
         await axios
-          .post("http://localhost:5000/deleteOne", { tokenId: voucher.tokenId })
+          .post("https://nft-streamer-backend.herokuapp.com/deleteOne", {
+            tokenId: voucher.tokenId,
+          })
           .then((res) => {
             console.log(res.data);
           });
