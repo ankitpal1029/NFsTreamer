@@ -1,5 +1,13 @@
 # NFTMarketPlace
 
+### if you want to use the test extension please provide us with your twitch username/id as an issue
+
+### i will need to give access to your account since the extension isn't approved by twitch yet
+
+### once approved you can check out the channel yangit69 's twitch channel and go to the chat below that will be
+
+### where the extension will be visible
+
 We have developed a platform for content creators to mint NFTs out of their popular streams and sell it to their audience for a source of revenue.
 
 We have developed a twitch extension which has chat functionality to display their NFTs, and a marketplace for creators to list their NFTs with ease.
