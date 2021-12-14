@@ -30,3 +30,5 @@ you can use this by just entering the below url in the twitch extension develope
 (couldn't host this extension since it would take a lot of time to get approval from twitch)
 
 [Extension Hosted](https://twitch-extension-nft.netlify.app/)
+
+## Since we couldn't get approval from twitch for the extension so quickly look inside the twitch-extension folder for more information on how to set it up for your channel
