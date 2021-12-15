@@ -43,20 +43,20 @@ you can use this by just entering the below url in the twitch extension develope
 
 ### extension live chat
 
-[Extension Hosted](./repo-assets/extension-chat.png)
+![image](./repo-assets/extension-chat.png)
 
 ## Marketplace listing
 
-[Extension Hosted](./repo-assets/marketplace-list.png)
+![image](./repo-assets/marketplace-list.png)
 
 ## Extension recent nfts
 
-[Extension Hosted](./repo-assets/recent-nfts.png)
+![image](./repo-assets/recent-nfts.png)
 
 ## Redeeming vouchers from market
 
-[Extension Hosted](./repo-assets/redeem-voucher.png)
+![image](./repo-assets/redeem-voucher.png)
 
 ## Signing vouchers
 
-[Extension Hosted](./repo-assets/sign-voucher.png)
+![image](./repo-assets/sign-voucher.png)
