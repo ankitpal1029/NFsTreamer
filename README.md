@@ -1,5 +1,7 @@
 # NFTMarketPlace
 
+## Kindly checkout the avax-main branch for the Moralis Hackathon!!
+
 ### if you want to use the test extension please provide us with your twitch username/id as an issue i will need to give access to your account since the extension isn't approved by twitch yet once approved you can check out the channel yangit69 's twitch channel and go to the chat below that will be where the extension will be visible
 
 ### find the contracts down here
