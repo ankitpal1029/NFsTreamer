@@ -6,6 +6,11 @@ import { createServer } from "http";
 
 import voucherRoutes from "./routes/vouchers";
 import SocketServer from "./socket/socket-server";
+import {
+  DB_CONNECTION,
+  FRONTEND_CORS,
+  MARKETPLACE_CORS,
+} from "./lib/constants";
 
 require("dotenv").config();
 
@@ -13,7 +18,7 @@ const main = async () => {
   const app = express();
   const httpServer = createServer(app);
 
-  const { PORT, DB_CONNECTION, FRONTEND_CORS, MARKETPLACE_CORS } = process.env;
+  const { PORT } = process.env;
 
   app.use(express.json());
   app.use(
