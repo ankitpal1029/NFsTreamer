@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import { useState, Component, useEffect } from "react";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
-import axios from "axios";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -12,8 +11,9 @@ import CardHeader from "@mui/material/CardHeader";
 
 import NFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 import { nftaddress } from "../../newconfig";
+import axios from "../../lib/axios_config";
 
-const singleVoucher = () => {
+const SingleVoucher = () => {
   const router = useRouter();
   const { signature } = router.query;
   console.log(signature);
@@ -23,7 +23,7 @@ const singleVoucher = () => {
   useEffect(() => {
     console.log("gonna fetch!!!");
     axios
-      .post("https://nft-streamer-backend.herokuapp.com/fetchSig", {
+      .post("/fetchSig", {
         signature: router.query.signature,
       })
       .then((response) => {
@@ -58,7 +58,7 @@ const singleVoucher = () => {
       try {
         console.log("tryna delete");
         await axios
-          .post("https://nft-streamer-backend.herokuapp.com/deleteOne", {
+          .post("/deleteOne", {
             tokenId: voucher.tokenId,
           })
           .then((res) => {
@@ -132,4 +132,4 @@ const singleVoucher = () => {
   //return(<p>signature</p>);
 };
 
-export default singleVoucher;
+export default SingleVoucher;
