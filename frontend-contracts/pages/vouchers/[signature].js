@@ -16,7 +16,7 @@ import { nftaddress } from "../../newconfig";
 const singleVoucher = () => {
   const router = useRouter();
   const { signature } = router.query;
-  console.log(signature);
+  //console.log(signature);
 
   const [vouchers, setVouchers] = useState([]);
 
