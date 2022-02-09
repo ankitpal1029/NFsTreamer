@@ -2,26 +2,30 @@
 pragma solidity ^0.8.4;
 pragma experimental ABIEncoderV2;
 
-import "hardhat/console.sol"; 
-import "@openzeppelin/contracts/access/AccessControl.sol";  
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol"; 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";  
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";  
-import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol"; 
-import "@openzeppelin/contracts/utils/Counters.sol";  
-import "hardhat/console.sol"; 
+import "hardhat/console.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "hardhat/console.sol";
 
-contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
+contract LazyNFT is ERC721URIStorage, EIP712, Ownable, AccessControlEnumerable{
   using ECDSA for bytes32;
 
   // to keep track of tokenIds generated (that is the ones you make a voucher for)
   Counters.Counter private _tokenIds;
   // address of the NFTmarketplace
-  address marketPlaceAddress;
 
   bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
+
   mapping (address => uint256) pendingWithdrawals;
+  // mapping for approvedMinters
+  // Market Item
   struct MarketItem{
       uint256 tokenId;
       address owner;
@@ -32,11 +36,13 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
   }
   mapping(address => MarketItem[]) nftsOwned;
 
-
-  constructor(address payable minter)
+  constructor()
     ERC721("LazyNFT", "LAZ") 
     EIP712("LazyNFT-Voucher", "1") {
-      _setupRole(MINTER_ROLE, minter);
+      // giving owner of contract MINTER_ROLE and DEFAULT_ADMIN_ROLE
+      _setupRole(MINTER_ROLE, msg.sender);
+      _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+
     }
 
   /// @notice Represents an un-minted NFT, which has not yet been recorded into the blockchain. A signed voucher can be redeemed for a real NFT using the redeem function.
@@ -52,6 +58,19 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
     string collection;
   }
 
+
+  function setNewMinter(address _addr) public onlyOwner{
+    grantRole(MINTER_ROLE, _addr);
+  }
+
+  function removeMinter(address _addr) public onlyOwner {
+    revokeRole(MINTER_ROLE, _addr);
+  }
+  /// @notice Redeems an NFTVoucher for an actual NFT, creating it in the process.
+  /// @param redeemer The address of the account which will receive the NFT upon success.
+  /// @param voucher An NFTVoucher that describes the NFT to be redeemed.
+  /// @param signature An EIP712 signature of the voucher, produced by the NFT creator.
+
   struct NFTCID {
     string v_url;
   }
@@ -64,6 +83,8 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
 
     // make sure that the signer is authorized to mint NFTs
     require(hasRole(MINTER_ROLE, signer), "Signature invalid or unauthorized");
+
+    // Check if 
 
     // make sure that the redeemer is paying enough to cover the buyer's cost
     require(msg.value >= voucher.minPrice, "Insufficient funds to redeem");
@@ -125,8 +146,8 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
     bytes32 digest = _hash(meta);
     return digest.toEthSignedMessageHash().recover(signature);
   }
-  
-  function supportsInterface(bytes4 interfaceId) public view virtual override (AccessControl, ERC721) returns (bool) {
+
+  function supportsInterface(bytes4 interfaceId) public view virtual override (AccessControlEnumerable, ERC721) returns (bool) {
     return ERC721.supportsInterface(interfaceId) || AccessControl.supportsInterface(interfaceId);
   }
 

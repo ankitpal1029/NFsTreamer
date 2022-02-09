@@ -15,7 +15,7 @@
     "@mui/material": "^5.1.1",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
-    "@openzeppelin/contracts": "^4.1.0",
+    "@openzeppelin/contracts": "^4.4.2",
     "autoprefixer": "^10.3.7",
     "axios": "^0.23.0",
     "chai": "4.3.4",
