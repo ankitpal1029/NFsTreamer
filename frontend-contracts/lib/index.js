@@ -1,5 +1,9 @@
 const ethers = require("ethers");
 const { TypedDataUtils } = require("ethers-eip712");
+const { NFTStorage, File,Blob } = require('nft.storage');
+const {pack} = require('ipfs-car/pack')
+const endpoint = 'https://api.nft.storage' 
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGMyODE0MmI4QTk1ZWU0NzJFQzhFYmZCZmFmYjNBMEJmMTJkODkxOUIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzNDczNjgzNTY4OCwibmFtZSI6InRlc3RpbmcifQ.rs8tUWt98e20_8G7vv9evNgtKDEhUNT-Q4pRbTk-ma0'
 
 const SIGNING_DOMAIN_NAME = "LazyNFT-Voucher";
 const SIGNING_DOMAIN_VERSION = "1";
@@ -16,12 +20,20 @@ class LazyMinter {
         { name: "chainId", type: "uint256" },
         { name: "verifyingContract", type: "address" },
       ],
+
+      /*
       NFTVoucher: [
         { name: "tokenId", type: "uint256" },
         { name: "minPrice", type: "uint256" },
         { name: "uri", type: "string" },
         { name: "collection", type: "string" },
       ],
+      */
+     
+      NFTCID: [
+        { name: "v_url", type: "string" }
+      ],
+      
     };
   }
 
@@ -37,22 +49,39 @@ class LazyMinter {
       chainId,
     };
     return this._domain;
-  }
+  } 
 
-  async _formatVoucher(voucher) {
+  async _formatVoucher(vouch) {
     const domain = await this._signingDomain();
     return {
-      domain,
-      types: this.types,
-      primaryType: "NFTVoucher",
-      message: voucher,
+      domain, 
+      types: this.types, 
+      primaryType: "NFTCID", 
+      message: vouch, 
     };
   }
 
   async createVoucher(tokenId, uri, minPrice = 0, collection) {
     const voucher = { tokenId, minPrice, uri, collection };
-    const typedData = await this._formatVoucher(voucher);
+
+    const voucher_json = {
+      "name": collection, 
+      "tokenId":tokenId, 
+      "minPrice":minPrice, 
+      "image": uri 
+    }
+
+    const storage = new NFTStorage({ endpoint, token })
+    const metadata = new Blob(JSON.stringify(voucher_json), { type: 'application/json' });
+
+    const v_url = await storage.storeBlob(metadata);
+    const meta = {v_url};
+    //const typedData = await this._formatVoucher(voucher);
+
+    const typedData = await this._formatVoucher(meta);
+
     const digest = TypedDataUtils.encodeDigest(typedData);
+
     const signature = await this.signer.signMessage(digest);
     /*
     console.log("===============================");
@@ -63,8 +92,9 @@ class LazyMinter {
     */
     return {
       voucher,
+      meta,
       signature,
-      digest,
+      digest
     };
   }
 }

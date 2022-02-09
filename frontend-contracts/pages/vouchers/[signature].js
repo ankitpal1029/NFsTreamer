@@ -16,7 +16,7 @@ import axios from "../../lib/axios_config";
 const SingleVoucher = () => {
   const router = useRouter();
   const { signature } = router.query;
-  console.log(signature);
+  //console.log(signature);
 
   const [vouchers, setVouchers] = useState([]);
 

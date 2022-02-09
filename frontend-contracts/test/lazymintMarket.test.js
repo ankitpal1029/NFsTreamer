@@ -57,7 +57,7 @@ describe("LazyNFTMarketPlace", function () {
         minPrice
       );
     }
-    const { voucher, signature } = await lazyMinter.createVoucher(
+    const { voucher, meta,signature } = await lazyMinter.createVoucher(
       101,
       "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
       minPrice
@@ -69,6 +69,7 @@ describe("LazyNFTMarketPlace", function () {
       (txn = await redeemerContract.redeem(
         redeemer.address,
         voucher,
+        meta,
         signature,
         {
           value: minPrice,

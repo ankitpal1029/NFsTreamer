@@ -28,7 +28,7 @@
     "hardhat": "^2.6.7",
     "ipfs-http-client": "50.1.2",
     "next": "11.1.2",
-    "nft.storage": "^5.0.0",
+    "nft.storage": "^5.2.3",
     "postcss": "^8.3.11",
     "react": "17.0.2",
     "react-dom": "17.0.2",
