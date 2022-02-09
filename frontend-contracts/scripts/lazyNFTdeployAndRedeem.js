@@ -10,6 +10,7 @@ async function main() {
   } catch (err) {
     console.log("deleting", err);
   }
+  
   const [a, redeemer, minter, _] = await ethers.getSigners();
 
   const NFT = await ethers.getContractFactory("LazyNFT");
