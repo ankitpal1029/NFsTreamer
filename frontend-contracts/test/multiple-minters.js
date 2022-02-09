@@ -89,24 +89,24 @@ describe("LazyNFT", function () {
       MINTER_ROLE,
     } = await signer1RoleSetup();
 
-    // setting up the signer
     const lazyMinter = new LazyMinter({
       contractAddress: contract.address,
       signer: minter,
     });
-
-    // Generating a voucher
-    const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
     const collection = "meme";
-    const { voucher, signature } = await lazyMinter.createVoucher(
+    const minPrice = ethers.constants.WeiPerEther; // charge 1 ETH
+
+    const { voucher, meta, signature } = await lazyMinter.createVoucher(
       1,
       "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-      minPrice,
+      0,
       collection
     );
 
+    // Generating a voucher
+
     await expect(
-      redeemerContract.redeem(redeemer.address, voucher, signature, {
+      redeemerContract.redeem(redeemer.address, voucher, meta, signature, {
         value: minPrice,
       })
     )
@@ -120,7 +120,7 @@ describe("LazyNFT", function () {
       .withArgs(minter.address, redeemer.address, voucher.tokenId);
 
     await expect(
-      redeemerContract.redeem(redeemer.address, voucher, signature, {
+      redeemerContract.redeem(redeemer.address, voucher, meta, signature, {
         value: minPrice,
       })
     ).to.be.revertedWith("ERC721: token already minted");
@@ -145,16 +145,15 @@ describe("LazyNFT", function () {
       signer: minter,
     });
     const collection = "meme";
-    const { voucher, signature } = await lazyMinter.createVoucher(
+    const { voucher, meta, signature } = await lazyMinter.createVoucher(
       1,
       "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
       0,
       collection
     );
 
-    voucher.tokenId = 2;
     await expect(
-      redeemerContract.redeem(redeemer.address, voucher, signature)
+      redeemerContract.redeem(redeemer.address, voucher, meta, signature)
     ).to.be.revertedWith("Signature invalid or unauthorized");
   });
 
