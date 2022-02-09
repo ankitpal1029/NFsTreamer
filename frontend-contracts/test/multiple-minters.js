@@ -4,6 +4,7 @@ const { LazyMinter } = require("../lib");
 const { solidity } = require("ethereum-waffle");
 const chai = require("chai");
 const axios = require("axios").default;
+const { BigNumber } = require("ethereum-waffle/node_modules/ethers");
 chai.use(solidity);
 
 async function deploy() {
@@ -17,19 +18,47 @@ async function deploy() {
   const redeemerFactory = factory.connect(redeemer);
   const redeemerContract = redeemerFactory.attach(contract.address);
 
-  console.log("=============================");
-  console.log(redeemerContract);
-  console.log("=============================");
-  console.log(redeemerFactory);
-  console.log("=============================");
+  const ownerFactory = factory.connect(owner);
+  const ownerContract = ownerFactory.attach(contract.address);
 
   return {
+    owner,
+    ownerContract,
     minter,
     minter2,
     redeemer,
     redeemer2,
     contract,
     redeemerContract,
+  };
+}
+
+async function signer1RoleSetup() {
+  const {
+    owner,
+    ownerContract,
+    contract,
+    redeemerContract,
+    redeemer,
+    minter,
+    minter2,
+  } = await deploy();
+
+  const MINTER_ROLE = ethers.utils.keccak256(
+    ethers.utils.toUtf8Bytes("MINTER_ROLE")
+  );
+
+  await ownerContract.setNewMinter(minter.address);
+
+  return {
+    owner,
+    ownerContract,
+    contract,
+    redeemerContract,
+    redeemer,
+    minter,
+    minter2,
+    MINTER_ROLE,
   };
 }
 
@@ -41,14 +70,99 @@ describe("LazyNFT", function () {
   });
 
   it("Should setup role to signer[1]", async function () {
-    const { contract, redeemerContract, redeemer, minter, minter2 } =
-      await deploy();
-    const MINTER_ROLE = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes("MINTER_ROLE")
+    const { redeemerContract, minter, MINTER_ROLE } = await signer1RoleSetup();
+
+    expect(await redeemerContract.getRoleMember(MINTER_ROLE, 1)).to.equal(
+      minter.address
+    );
+  });
+
+  it("Should setup role to signer[1] and generate voucher, and redeem it", async function () {
+    const {
+      owner,
+      ownerContract,
+      contract,
+      redeemerContract,
+      redeemer,
+      minter,
+      minter2,
+      MINTER_ROLE,
+    } = await signer1RoleSetup();
+
+    // setting up the signer
+    const lazyMinter = new LazyMinter({
+      contractAddress: contract.address,
+      signer: minter,
+    });
+
+    // Generating a voucher
+    const minPrice = ethers.constants.WeiPerEther; // charge 1 Eth
+    const collection = "meme";
+    const { voucher, signature } = await lazyMinter.createVoucher(
+      1,
+      "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+      minPrice,
+      collection
     );
 
-    // const minterCount = await redeemerContract.getRoleMemberCount(MINTER_ROLE);
-    console.log(minterCount);
-    // const minterCount = await redeemerContract.getRoleMemberCount(MINTER_ROLE);
+    await expect(
+      redeemerContract.redeem(redeemer.address, voucher, signature, {
+        value: minPrice,
+      })
+    )
+      .to.emit(contract, "Transfer") // transfer from null address to minter
+      .withArgs(
+        "0x0000000000000000000000000000000000000000",
+        minter.address,
+        voucher.tokenId
+      )
+      .and.to.emit(contract, "Transfer") // transfer from minter to redeemer
+      .withArgs(minter.address, redeemer.address, voucher.tokenId);
+
+    await expect(
+      redeemerContract.redeem(redeemer.address, voucher, signature, {
+        value: minPrice,
+      })
+    ).to.be.revertedWith("ERC721: token already minted");
+  });
+
+  it("Should Add then remove Signer[1] from role and fail to mint voucher", async function () {
+    const {
+      owner,
+      ownerContract,
+      contract,
+      redeemerContract,
+      redeemer,
+      minter,
+      minter2,
+      MINTER_ROLE,
+    } = await signer1RoleSetup();
+
+    await ownerContract.removeMinter(minter.address);
+
+    const lazyMinter = new LazyMinter({
+      contractAddress: contract.address,
+      signer: minter,
+    });
+    const collection = "meme";
+    const { voucher, signature } = await lazyMinter.createVoucher(
+      1,
+      "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+      0,
+      collection
+    );
+
+    voucher.tokenId = 2;
+    await expect(
+      redeemerContract.redeem(redeemer.address, voucher, signature)
+    ).to.be.revertedWith("Signature invalid or unauthorized");
+  });
+
+  it("Should fail to create new minter from non Owner", async function () {
+    const { redeemerContract, minter } = await deploy();
+
+    await expect(
+      redeemerContract.setNewMinter(minter.address)
+    ).to.be.revertedWith("Ownable: caller is not the owner");
   });
 });
