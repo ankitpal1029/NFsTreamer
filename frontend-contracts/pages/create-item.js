@@ -12,8 +12,7 @@ import { nftaddress, nftmarketaddress } from "../newconfig";
 //import Market from "../artifacts/contracts/LazyNFTMarket.sol/LazyNFTMarket.json";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
-
-const axios = require("axios").default;
+import axios from "../lib/axios_config";
 
 //export default function CreateItem() {
 const CreateItem = () => {
@@ -67,9 +66,7 @@ const CreateItem = () => {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    let response = await axios.get(
-      "https://nft-streamer-backend.herokuapp.com/getCurrentId"
-    );
+    let response = await axios.get("/getCurrentId");
 
     console.log(response.data);
     let tokenID = response.data.currId + 1;
@@ -99,12 +96,9 @@ const CreateItem = () => {
     });
 
     try {
-      const res = await axios.post(
-        "https://nft-streamer-backend.herokuapp.com/addVoucher",
-        {
-          data: objToSend,
-        }
-      );
+      const res = await axios.post("/addVoucher", {
+        data: objToSend,
+      });
     } catch (err) {
       console.log(err);
     }

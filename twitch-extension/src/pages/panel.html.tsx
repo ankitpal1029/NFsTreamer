@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import axios from "axios";
 import "./panel.html.css";
 import InfoBar from "../components/panel/infobar/infobar";
 import Input from "../components/panel/input/input";
@@ -12,6 +11,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatIcon from "@mui/icons-material/Chat";
 import UserNFT from "../components/user-nft/user-nft";
 import AvailableNFTs from "../components/available-nfts/available-nfts";
+import { baseURL } from "../lib/axios_config";
 
 declare global {
   interface Window {
@@ -63,7 +63,8 @@ const PanelView: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<IMessageFormat[]>([]);
   //const ENDPOINT = "http://localhost:5000";
-  const ENDPOINT = "https://nft-streamer-backend.herokuapp.com";
+  // const ENDPOINT = "https://nft-streamer-backend.herokuapp.com";
+  const ENDPOINT = baseURL;
 
   const theme = useTheme();
   const [value, setValue] = React.useState(0);

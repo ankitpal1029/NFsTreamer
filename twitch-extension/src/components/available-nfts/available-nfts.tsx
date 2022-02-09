@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../../lib/axios_config";
 
 interface INFTServerDetails {
   voucher: {
@@ -21,9 +21,8 @@ const AvailableNFTs = () => {
 
   const loadNFTs = async () => {
     try {
-      const response = await axios.get(
-        "https://nft-streamer-backend.herokuapp.com/fetchVouchers"
-      );
+      console.log("something come da bunda");
+      const response = await axios.get("/fetchVouchers");
       setNFTs(response.data.allVoucher);
       console.log(response.data.allVoucher);
     } catch (err) {
@@ -41,11 +40,7 @@ const AvailableNFTs = () => {
               <div
                 key={i}
                 className="bg-black border rounded-xl overflow-hidden "
-                onClick={() =>
-                  window.open(
-                    `https://nft-streamer-marketplace.netlify.app/vouchers/${nft.signature}`
-                  )
-                }
+                onClick={() => window.open(`/${nft.signature}`)}
               >
                 <img
                   src={`https://ipfs.io/ipfs/${nft.voucher.uri.split("//")[1]}`}

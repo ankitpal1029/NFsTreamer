@@ -31,7 +31,7 @@
     "web3modal": "^1.9.4"
   },
   "scripts": {
-    "start": "HTTPS=true PORT=8080 craco start",
+    "start": "NODE_ENV=development HTTPS=true PORT=8080 craco start",
     "postinstall": "sh install_cert.sh",
     "build": "craco build",
     "test": "craco test",
