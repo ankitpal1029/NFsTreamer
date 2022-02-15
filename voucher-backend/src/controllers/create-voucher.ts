@@ -2,15 +2,16 @@ import { Request, Response } from "express";
 import Voucher from "../models/voucher";
 
 interface IvoucherAPIData {
-  voucher: {
-    uri: String;
-    minPrice: {
-      type: String;
-      hex: String;
-    };
-    tokenId: Number;
-    collection: String;
+  voucher: {    
+      uri: String,
+      minPrice: {
+        type: String;
+        hex: String;
+      };
+      tokenId: Number;
+      collection: String;
   };
+  meta: String;
   signature: String;
 }
 const CreateVoucher = async (req: Request, res: Response) => {
@@ -19,11 +20,14 @@ const CreateVoucher = async (req: Request, res: Response) => {
   console.log(recievedData);
   let insertData = recievedData.map((x: IvoucherAPIData) => ({
     voucher: {
+
       uri: x.voucher.uri,
       minPrice: x.voucher.minPrice,
       tokenId: x.voucher.tokenId,
       collection: x.voucher.collection,
+      
     },
+    meta: x.meta,
     signature: x.signature,
     redeemed: false,
   }));

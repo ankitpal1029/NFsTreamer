@@ -5,7 +5,7 @@ async function main() {
   const [deployer, _] = await ethers.getSigners();
 
   const NFT = await ethers.getContractFactory("LazyNFT");
-  const nft = await NFT.deploy(deployer.address);
+  const nft = await NFT.deploy();
   await nft.deployed();
 
   console.log("LazyNFT deployed to:", nft.address);

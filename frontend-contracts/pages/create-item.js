@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
 const { LazyMinter } = require("../lib");
 
-import { nftaddress, nftmarketaddress } from "../newconfig";
+import { nftaddress, nftmarketaddress } from "../config";
 
 import Navbar from "../components/navbar";
 
@@ -15,7 +15,8 @@ import Navbar from "../components/navbar";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 import axios from "../lib/axios_config";
-
+var cors = require('cors');
+//app.use(cors());
 //export default function CreateItem() {
 const CreateItem = () => {
   //const [cid, setCid] = useState(null);
@@ -48,13 +49,16 @@ const CreateItem = () => {
         progress: (prog) => console.log(`received: ${prog}`),
       });
       setdisplayURL(`https://ipfs.io/ipfs/${added.path}`);
-      //setFileURL(url);
+      
       const cid = added.path;
+      console.log("logging CID");
+      console.log(cid);
       createSale(cid, name, price);
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
-
+    console.log("Fileurl");
+    console.log(cid);
     console.log(fileURL);
   }
 
@@ -67,9 +71,9 @@ const CreateItem = () => {
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
-
+    console.log("here")
     let response = await axios.get("/getCurrentId");
-
+    console.log("here")
     console.log(response.data);
     let tokenID = response.data.currId + 1;
 
@@ -81,7 +85,7 @@ const CreateItem = () => {
 
     let objToSend = [];
     const bigPrice = ethers.utils.parseUnits(price.toString(), "ether");
-    const { voucher, signature } = await lazyMinter.createVoucher(
+    const { voucher, meta, signature } = await lazyMinter.createVoucher(
       tokenID,
       `ipfs://${cid}`,
       bigPrice,
@@ -92,9 +96,10 @@ const CreateItem = () => {
     console.log("signature:", signature);
     objToSend.push({
       voucher,
+      meta,
       signature,
-      ipfs: `ipfs://${cid}`,
-      tokenID,
+      //ipfs: `ipfs://${cid}`,
+      //tokenID,
     });
 
     try {
