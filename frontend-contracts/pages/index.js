@@ -13,10 +13,11 @@ const chai = require("chai");
 const { solidity } = require("ethereum-waffle");
 chai.use(solidity);
 */
+
 import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 import axios from "../lib/axios_config";
 //import LazyNFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
-import { nftaddress } from "../newconfig";
+import { nftaddress } from "../config";
 
 const ListVouchers = () => {
   const [vouchers, setVouchers] = useState([]);
@@ -28,7 +29,7 @@ const ListVouchers = () => {
     });
   }, []);
 
-  const _redm = async (voucher, signature) => {
+  const _redm = async (voucher, meta,signature) => {
     console.log("redeem");
     const web3Modal = new Web3Modal({
       network: "mainnet",
@@ -45,6 +46,7 @@ const ListVouchers = () => {
       const res = await lazynftContract.redeem(
         signer.getAddress(),
         voucher,
+        meta,
         signature,
         {
           value: voucher.minPrice,
@@ -105,7 +107,7 @@ const ListVouchers = () => {
                     <CardActions>
                       <Button
                         size="small"
-                        onClick={() => _redm(v.voucher, v.signature)}
+                        onClick={() => _redm(v.voucher, v.meta,v.signature)}
                       >
                         Redeem
                       </Button>

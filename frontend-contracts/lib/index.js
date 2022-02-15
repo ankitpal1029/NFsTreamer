@@ -1,9 +1,24 @@
 const ethers = require("ethers");
+
+
 const { TypedDataUtils } = require("ethers-eip712");
-const { NFTStorage, File,Blob } = require('nft.storage');
-const {pack} = require('ipfs-car/pack')
-const endpoint = 'https://api.nft.storage' 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGMyODE0MmI4QTk1ZWU0NzJFQzhFYmZCZmFmYjNBMEJmMTJkODkxOUIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzNDczNjgzNTY4OCwibmFtZSI6InRlc3RpbmcifQ.rs8tUWt98e20_8G7vv9evNgtKDEhUNT-Q4pRbTk-ma0'
+
+//const { NFTStorage, Blob } = require('nft.storage');
+
+//import { NFTStorage,Blob } from 'nft.storage/dist/bundle.esm.min.js'
+
+//import NFTStorage from 'nft.storage/dist/bundle.esm.min.js';
+
+import {
+  NFTStorage, 
+  Blob,
+} from "https://cdn.jsdelivr.net/npm/nft.storage@v5.1.3/dist/bundle.esm.min.js";
+
+
+
+
+const endpoint = 'https://api.nft.storage';
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGMyODE0MmI4QTk1ZWU0NzJFQzhFYmZCZmFmYjNBMEJmMTJkODkxOUIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzNDczNjgzNTY4OCwibmFtZSI6InRlc3RpbmcifQ.rs8tUWt98e20_8G7vv9evNgtKDEhUNT-Q4pRbTk-ma0';
 
 const SIGNING_DOMAIN_NAME = "LazyNFT-Voucher";
 const SIGNING_DOMAIN_VERSION = "1";
@@ -56,27 +71,32 @@ class LazyMinter {
     return {
       domain, 
       types: this.types, 
-      primaryType: "NFTCID", 
+      primaryType: "NFTCID",  
       message: vouch, 
     };
   }
 
   async createVoucher(tokenId, uri, minPrice = 0, collection) {
     const voucher = { tokenId, minPrice, uri, collection };
-
+    
     const voucher_json = {
       "name": collection, 
       "tokenId":tokenId, 
       "minPrice":minPrice, 
       "image": uri 
-    }
+    };
+    
+    
+    //console.log("json contents");
+    //console.log(collection,tokenId,minPrice,uri);
+    
+    const storage = new NFTStorage({ endpoint, token });
+    const metadata = new Blob([JSON.stringify(voucher_json)], { type: 'application/json' });
 
-    const storage = new NFTStorage({ endpoint, token })
-    const metadata = new Blob(JSON.stringify(voucher_json), { type: 'application/json' });
+    const v_url = await storage.storeBlob(new Blob([metadata]));
 
-    const v_url = await storage.storeBlob(metadata);
+
     const meta = {v_url};
-    //const typedData = await this._formatVoucher(voucher);
 
     const typedData = await this._formatVoucher(meta);
 
@@ -100,5 +120,5 @@ class LazyMinter {
 }
 
 module.exports = {
-  LazyMinter,
+  LazyMinter
 };

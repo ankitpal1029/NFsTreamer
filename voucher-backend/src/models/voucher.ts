@@ -25,7 +25,14 @@ const VoucherSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+
   },
+  meta:{ v_url:{
+    type:String,
+    required:true,
+  }
+  },
+ 
   signature: {
     type: String,
     required: true,
@@ -37,3 +44,7 @@ const VoucherSchema = new mongoose.Schema({
 });
 
 export default mongoose.model("Voucher", VoucherSchema);
+
+    /*
+    
+    */
