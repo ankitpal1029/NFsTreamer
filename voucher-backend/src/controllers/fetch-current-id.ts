@@ -4,7 +4,7 @@ import Voucher from "../models/voucher";
 const FetchCurrentId = async (_: any, res: Response) => {
   let currId;
   try {
-    currId = await Voucher.countDocuments({});
+    currId = await Voucher.countDocuments({}); // getting timeout error here!!!
   } catch (err) {
     console.log(err);
   }

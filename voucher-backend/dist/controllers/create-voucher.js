@@ -14,6 +14,7 @@ const CreateVoucher = async (req, res) => {
             tokenId: x.voucher.tokenId,
             collection: x.voucher.collection,
         },
+        meta: x.meta,
         signature: x.signature,
         redeemed: false,
     }));
