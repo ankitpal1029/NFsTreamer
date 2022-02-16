@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import Voucher from "../models/voucher";
+import Voucher from "../../models/voucher";
 
 const FetchVouchersSig = async (req: Request, res: Response) => {
   let recievedData: any = req.body;

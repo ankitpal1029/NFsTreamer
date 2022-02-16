@@ -1,8 +1,20 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import twitchIcon from "../assets/twitch_icon.png";
 import Image from "next/image";
+import axios from "axios";
 
 const SignIn = () => {
+  const redirect = "http://localhost:3000/auth/twitch/callback";
+  const clientID = "j1ixdsvzh5g4uqj1a2p7lydufww406";
+  const secret = "a33vihxvbozdhxixx6l8eo20io5qcx";
+  const router = useRouter();
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    router.push(
+      `https://id.twitch.tv/oauth2/authorize?client_id=${clientID}&redirect_uri=${redirect}&response_type=token&scope=user:read:email`
+    );
+  };
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-gray-100">
       <form className="p-10 bg-white rounded flex justify-center items-center flex-col shadow-md">
@@ -23,7 +35,7 @@ const SignIn = () => {
           className="bg-purple-600 hover:bg-purple-900 text-white font-bold p-2 rounded w-80 flex items-center justify-around"
           id="login"
           type="submit"
-          // onSubmit={}
+          onClick={handleLogin}
         >
           <div className="text-center pl-1">
             <span>Login with </span>

@@ -1,5 +1,5 @@
 import { Response } from "express";
-import Voucher from "../models/voucher";
+import Voucher from "../../models/voucher";
 
 const FetchCurrentId = async (_: any, res: Response) => {
   let currId;

@@ -4,16 +4,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const voucher_1 = __importDefault(require("../models/voucher"));
-const DeleteAllVouchers = async (_, res) => {
+const FetchCurrentId = async (_, res) => {
+    let currId;
     try {
-        await voucher_1.default.deleteMany();
+        currId = await voucher_1.default.countDocuments({});
     }
     catch (err) {
         console.log(err);
     }
-    res.json({
-        msg: "deleted all vouchers from db",
+    console.log(currId);
+    return res.json({
+        currId: currId,
     });
 };
-exports.default = DeleteAllVouchers;
-//# sourceMappingURL=delete-all-vouchers.js.map
+exports.default = FetchCurrentId;
+//# sourceMappingURL=fetch-current-id.js.map

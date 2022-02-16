@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Voucher from "../models/voucher";
+import Voucher from "../../models/voucher";
 
-const DeleteAllVouchers = async (req: Request, res: Response) => {
+const DeleteAllVouchers = async (_: Request, res: Response) => {
   try {
     await Voucher.deleteMany();
   } catch (err) {

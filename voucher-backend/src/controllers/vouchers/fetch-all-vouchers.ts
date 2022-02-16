@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Voucher from "../models/voucher";
+import Voucher from "../../models/voucher";
 
-const FetchAllVouchers = async (req: Request, res: Response) => {
+const FetchAllVouchers = async (_: Request, res: Response) => {
   let allVoucher;
   //console.log(req);
   try {

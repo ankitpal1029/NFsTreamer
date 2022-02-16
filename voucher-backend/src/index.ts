@@ -1,19 +1,20 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import mongoose from "mongoose";
 import { Server } from "socket.io";
 import { createServer } from "http";
 
 import voucherRoutes from "./routes/vouchers";
+import authRoutes from "./routes/auth";
+
 import SocketServer from "./socket/socket-server";
 import {
   DB_CONNECTION,
   FRONTEND_CORS,
   MARKETPLACE_CORS,
 } from "./lib/constants";
-console.log(FRONTEND_CORS);
-console.log(MARKETPLACE_CORS);
 require("dotenv").config();
 
 const main = async () => {
@@ -23,20 +24,19 @@ const main = async () => {
   const { PORT } = process.env;
 
   app.use(express.json());
-  console.log(MARKETPLACE_CORS);
+  app.use(cookieParser());
 
   app.use(
     cors({
       //origin: [MARKETPLACE_CORS as string, FRONTEND_CORS as string],
       origin: MARKETPLACE_CORS,
+      credentials: true,
     })
   );
 
   //connect to db
-  console.log("DB connection");
-  console.log(DB_CONNECTION);
   mongoose.connect(`${DB_CONNECTION}`, () => {
-    console.log(`connected to db`);
+    console.log(`connected to db ${DB_CONNECTION}`);
   });
 
   // setting up socket io
@@ -59,6 +59,7 @@ const main = async () => {
   });
 
   app.use(voucherRoutes);
+  app.use(authRoutes);
 };
 
 main().catch((err) => {
