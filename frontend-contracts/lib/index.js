@@ -8,12 +8,10 @@ const { TypedDataUtils } = require("ethers-eip712");
 //import { NFTStorage,Blob } from 'nft.storage/dist/bundle.esm.min.js'
 
 //import NFTStorage from 'nft.storage/dist/bundle.esm.min.js';
-
-import {
+const {
   NFTStorage, 
   Blob,
-} from "https://cdn.jsdelivr.net/npm/nft.storage@v5.1.3/dist/bundle.esm.min.js";
-
+} = require("https://cdn.jsdelivr.net/npm/nft.storage@v5.1.3/dist/bundle.esm.min.js");
 
 
 

@@ -76,6 +76,8 @@ const CreateItem = () => {
     let tokenID = response.data.currId + 1;
 
     console.log("should be minter address", signer.getAddress());
+    console.log("nftaddress:",nftaddress);
+
     const lazyMinter = new LazyMinter({
       contractAddress: nftaddress,
       signer: signer,

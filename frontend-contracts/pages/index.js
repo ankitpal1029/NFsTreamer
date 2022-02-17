@@ -29,7 +29,7 @@ const ListVouchers = () => {
     });
   }, []);
 
-  const _redm = async (voucher, meta,signature) => {
+  const _redm = async (voucher, meta, signature) => {
     console.log("redeem");
     const web3Modal = new Web3Modal({
       network: "mainnet",
@@ -52,6 +52,7 @@ const ListVouchers = () => {
           value: voucher.minPrice,
         }
       );
+      console.log("redeeming!!!!!")
       console.log(res);
 
       try {

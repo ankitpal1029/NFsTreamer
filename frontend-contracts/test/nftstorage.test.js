@@ -36,6 +36,8 @@ describe("LazyNFT", function () {
 
   it("Should redeem an NFT from a signed voucher", async function () {
     const { contract, redeemerContract, redeemer, minter } = await deploy();
+    console.log("HERE!!!!!!!!!!!!!!!!")
+    console.log("contract address:",contract.address)
 
     const lazyMinter = new LazyMinter({
       contractAddress: contract.address,
@@ -102,7 +104,6 @@ describe("LazyNFT", function () {
 
     const signers = await ethers.getSigners();
     const rando = signers[signers.length - 1];
-
     const lazyMinter = new LazyMinter({
       contractAddress: contract.address,
       signer: rando,
@@ -114,10 +115,12 @@ describe("LazyNFT", function () {
       0,
       collection
     );
-
+    
     await expect(
       redeemerContract.redeem(redeemer.address, voucher, meta, signature)
-    ).to.be.revertedWith("Signature invalid or unauthorized");
+      ).to.be.revertedWith("Nothing");
+    //).to.be.revertedWith("Signature invalid or unauthorized");
+    
   });
 
   it("Should fail to redeem an NFT voucher that's been modified", async function () {
