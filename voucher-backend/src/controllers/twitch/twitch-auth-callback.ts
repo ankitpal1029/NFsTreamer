@@ -52,7 +52,7 @@ const TwitchAuthCallback = async (req: Request, res: Response) => {
 
   res.status(200).cookie("TWITCH_ACCESS_TOKEN", access_token, {
     httpOnly: true,
-    expires: new Date(Date.now() + 12 * 3600000),
+    maxAge: 60*60*1000,
   });
   return res.send();
   // use token to get user info and store it in db

@@ -8,16 +8,9 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 
-/*
-const chai = require("chai");
-const { solidity } = require("ethereum-waffle");
-chai.use(solidity);
-*/
-
-import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
+import LazyNFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 import axios from "../lib/axios_config";
-//import LazyNFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
-import { nftaddress } from "../config";
+import { contract, deployer } from "../config";
 
 const ListVouchers = () => {
   const [vouchers, setVouchers] = useState([]);
@@ -29,7 +22,7 @@ const ListVouchers = () => {
     });
   }, []);
 
-  const _redm = async (voucher, meta,signature) => {
+  const _redm = async (voucher, meta, signature) => {
     console.log("redeem");
     const web3Modal = new Web3Modal({
       network: "mainnet",
@@ -40,7 +33,7 @@ const ListVouchers = () => {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    const lazynftContract = new ethers.Contract(nftaddress, NFT.abi, signer);
+    const lazynftContract = new ethers.Contract(contract, LazyNFT.abi, signer);
 
     try {
       const res = await lazynftContract.redeem(
@@ -69,8 +62,6 @@ const ListVouchers = () => {
     } catch (err) {
       console.log("redeem not working", err);
     }
-
-    //console.log(await lazynftContract.fetchNFTsOwned(signer.getAddress()));
   };
 
   return (
@@ -80,11 +71,7 @@ const ListVouchers = () => {
           {vouchers.map((v, index) => {
             if (!v.redeemed) {
               return (
-                <div
-                  className=""
-                  //style={{ padding: "10px" }}
-                  key={index}
-                >
+                <div className="" key={index}>
                   <Card sx={{ maxWidth: 345 }} variant="outlined">
                     <CardHeader
                       title="Banksy"
@@ -107,7 +94,7 @@ const ListVouchers = () => {
                     <CardActions>
                       <Button
                         size="small"
-                        onClick={() => _redm(v.voucher, v.meta,v.signature)}
+                        onClick={() => _redm(v.voucher, v.meta, v.signature)}
                       >
                         Redeem
                       </Button>

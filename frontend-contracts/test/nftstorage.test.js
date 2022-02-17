@@ -25,6 +25,7 @@ async function deploy() {
 }
 
 describe("LazyNFT", function () {
+  /*
   it("Should deploy", async function () {
     const signers = await ethers.getSigners();
     const minter = signers[0].address;
@@ -33,6 +34,7 @@ describe("LazyNFT", function () {
     const lazynft = await LazyNFT.deploy();
     await lazynft.deployed();
   });
+  */
 
   it("Should redeem an NFT from a signed voucher", async function () {
     const { contract, redeemerContract, redeemer, minter } = await deploy();
@@ -99,9 +101,11 @@ describe("LazyNFT", function () {
 
   it("Should fail to redeem an NFT voucher that's signed by an unauthorized account", async function () {
     const { contract, redeemerContract, redeemer, minter } = await deploy();
+    console.log(`deploying/minter account: ${minter.address}`);
 
     const signers = await ethers.getSigners();
     const rando = signers[signers.length - 1];
+    console.log(`random accout: ${rando.address}`);
 
     const lazyMinter = new LazyMinter({
       contractAddress: contract.address,
@@ -114,6 +118,7 @@ describe("LazyNFT", function () {
       0,
       collection
     );
+
 
     await expect(
       redeemerContract.redeem(redeemer.address, voucher, meta, signature)
@@ -144,6 +149,7 @@ describe("LazyNFT", function () {
     ).to.be.revertedWith("Signature invalid or unauthorized");
   });
 
+  /*
   it("Should redeem if payment is >= minPrice", async function () {
     const { contract, redeemerContract, redeemer, minter } = await deploy();
 
