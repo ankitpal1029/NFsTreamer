@@ -17,7 +17,7 @@ chai.use(solidity);
 import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 import axios from "../lib/axios_config";
 //import LazyNFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
-import { nftaddress } from "../config";
+import { contract, deployer } from "../config";
 
 const ListVouchers = () => {
   const [vouchers, setVouchers] = useState([]);
@@ -40,7 +40,7 @@ const ListVouchers = () => {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    const lazynftContract = new ethers.Contract(nftaddress, NFT.abi, signer);
+    const lazynftContract = new ethers.Contract(contract, NFT.abi, signer);
 
     try {
       const res = await lazynftContract.redeem(

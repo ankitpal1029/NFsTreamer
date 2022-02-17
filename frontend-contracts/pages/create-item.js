@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
 const { LazyMinter } = require("../lib");
 
-import { nftaddress, nftmarketaddress } from "../config";
+import { contract, deployer} from "../config";
 
 //import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 //import Market from "../artifacts/contracts/LazyNFTMarket.sol/LazyNFTMarket.json";
@@ -77,7 +77,7 @@ const CreateItem = () => {
 
     console.log("should be minter address", signer.getAddress());
     const lazyMinter = new LazyMinter({
-      contractAddress: nftaddress,
+      contractAddress: contract,
       signer: signer,
     });
 
