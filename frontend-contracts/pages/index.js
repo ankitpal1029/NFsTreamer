@@ -12,14 +12,22 @@ import LazyNFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 import axios from "../lib/axios_config";
 import { contract, deployer } from "../config";
 
+// redux imports
+import { useDispatch} from 'react-redux';
+import {login} from '../redux/slices/auth/authSlice.js';
+
 const ListVouchers = () => {
+  const dispatch = useDispatch();
   const [vouchers, setVouchers] = useState([]);
 
   useEffect(() => {
+    dispatch(login());
     axios.get("/fetchVouchers").then((response) => {
       console.log(response);
       setVouchers(response.data.allVoucher);
     });
+
+
   }, []);
 
   const _redm = async (voucher, meta, signature) => {

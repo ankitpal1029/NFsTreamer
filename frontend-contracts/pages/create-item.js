@@ -16,7 +16,6 @@ import axios from "../lib/axios_config";
 
 
 const CreateItem = () => {
-
   const [file, setFile] = useState(null);
   const [displayURL, setdisplayURL] = useState(null);
   const [fileURL, setFileURL] = useState(null);
