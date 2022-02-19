@@ -10,6 +10,7 @@ import { LazyMinter } from "../lib/index";
 import { contract, deployer} from "../config";
 
 import Navbar from "../components/navbar";
+import withAuth from "../components/HOC/withAuth";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 import axios from "../lib/axios_config";
@@ -138,4 +139,4 @@ const CreateItem = () => {
   );
 };
 
-export default CreateItem;
+export default withAuth(CreateItem);

@@ -6,9 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const twitch_users_1 = __importDefault(require("../../models/twitch-users"));
 const ReturnTwitchUser = async (req, res) => {
-    console.log(req.cookies);
     if (!req.cookies["TWITCH_ACCESS_TOKEN"]) {
-        res.status(401).send({ error: "Cookie not found" });
+        res.send({ error: "Cookie not found" });
     }
     else {
         const access_token = req.cookies["TWITCH_ACCESS_TOKEN"];

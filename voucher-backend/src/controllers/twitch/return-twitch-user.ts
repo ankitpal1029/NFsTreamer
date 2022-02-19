@@ -4,10 +4,9 @@ import { Request, Response } from "express";
 import TwitchUser from "../../models/twitch-users";
 
 const ReturnTwitchUser = async (req: Request, res: Response) => {
-  console.log(req.cookies);
   if (!req.cookies["TWITCH_ACCESS_TOKEN"]) {
     // cookie isn't there so generate a new one
-    res.status(401).send({ error: "Cookie not found" });
+    res.send({ error: "Cookie not found" });
   } else {
     const access_token = req.cookies["TWITCH_ACCESS_TOKEN"];
     const clientID = "j1ixdsvzh5g4uqj1a2p7lydufww406";

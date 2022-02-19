@@ -1,4 +1,4 @@
-import { useState, Component, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import Card from "@mui/material/Card";
@@ -8,13 +8,17 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 
+// component imports
+import Navbar from "../components/navbar";
+import withAuth from "../components/HOC/withAuth";
+
 import LazyNFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 import axios from "../lib/axios_config";
 import { contract, deployer } from "../config";
 
 // redux imports
-import { useDispatch} from 'react-redux';
-import {login} from '../redux/slices/auth/authSlice.js';
+import { useDispatch } from "react-redux";
+import { login } from "../redux/slices/auth/authSlice.js";
 
 const ListVouchers = () => {
   const dispatch = useDispatch();
@@ -26,8 +30,6 @@ const ListVouchers = () => {
       console.log(response);
       setVouchers(response.data.allVoucher);
     });
-
-
   }, []);
 
   const _redm = async (voucher, meta, signature) => {
@@ -73,51 +75,55 @@ const ListVouchers = () => {
   };
 
   return (
-    <div className="m-4">
-      {vouchers.length ? (
-        <div className="grid grid-cols-3 gap-4">
-          {vouchers.map((v, index) => {
-            if (!v.redeemed) {
-              return (
-                <div className="" key={index}>
-                  <Card sx={{ maxWidth: 345 }} variant="outlined">
-                    <CardHeader
-                      title="Banksy"
-                      subheader={v.voucher.collection + " collection"}
-                    />
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image={
-                        "https://ipfs.io/ipfs/" + v.voucher.uri.split("//")[1]
-                      }
-                    />
+    <>
+      <Navbar />
+      <div className="m-4">
+        {vouchers.length ? (
+          <div className="grid grid-cols-3 gap-4">
+            {vouchers.map((v, index) => {
+              if (!v.redeemed) {
+                return (
+                  <div className="" key={index}>
+                    <Card sx={{ maxWidth: 345 }} variant="outlined">
+                      <CardHeader
+                        title="Banksy"
+                        subheader={v.voucher.collection + " collection"}
+                      />
+                      <CardMedia
+                        component="img"
+                        height="140"
+                        image={
+                          "https://ipfs.io/ipfs/" + v.voucher.uri.split("//")[1]
+                        }
+                      />
 
-                    <CardContent>
-                      Price:{" "}
-                      {parseInt(v.voucher.minPrice.hex, 16) / Math.pow(10, 18)}{" "}
-                      ETH
-                    </CardContent>
-                    <CardContent>Signature: {v.signature}</CardContent>
-                    <CardActions>
-                      <Button
-                        size="small"
-                        onClick={() => _redm(v.voucher, v.meta, v.signature)}
-                      >
-                        Redeem
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </div>
-              );
-            }
-          })}
-        </div>
-      ) : (
-        <div> No posts!!</div>
-      )}
-    </div>
+                      <CardContent>
+                        Price:{" "}
+                        {parseInt(v.voucher.minPrice.hex, 16) /
+                          Math.pow(10, 18)}{" "}
+                        ETH
+                      </CardContent>
+                      <CardContent>Signature: {v.signature}</CardContent>
+                      <CardActions>
+                        <Button
+                          size="small"
+                          onClick={() => _redm(v.voucher, v.meta, v.signature)}
+                        >
+                          Redeem
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </div>
+                );
+              }
+            })}
+          </div>
+        ) : (
+          <div> No Vouchers!!</div>
+        )}
+      </div>
+    </>
   );
 };
 
-export default ListVouchers;
+export default withAuth(ListVouchers);
