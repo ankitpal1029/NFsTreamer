@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../lib/axios_config";
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
-import { ShortenAddress } from "../../../lib/shorten_address";
 
 const initialState = {
   user: null,
@@ -16,22 +15,14 @@ export const login = createAsyncThunk("auth/login", async (thunkAPI) => {
   try {
     const response = await axios.get("/auth/twitch/get-user");
 
-    const web3Modal = new Web3Modal({
-      network: "mainnet",
-      cacheProvider: true,
-    });
-
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-
-    const data = {
+    // use this data to register wallet address on the backend
+    const user = {
       ...response.data.user,
-      wallet_address: ShortenAddress(await signer.getAddress()),
+      wallet_address: "0x0000000000000",
     };
 
     // return response.data.user;
-    return data;
+    return user;
   } catch (error) {
     console.log(error);
     const message =
@@ -41,6 +32,40 @@ export const login = createAsyncThunk("auth/login", async (thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
+
+export const connectWallet = createAsyncThunk(
+  "auth/wallet",
+  async (thunkAPI, { getState }) => {
+    try {
+      const state = getState();
+      const web3Modal = new Web3Modal({
+        network: "mainnet",
+        cacheProvider: true,
+      });
+
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      console.log(state.auth.user);
+      const data = {
+        id: state?.auth?.user?.id,
+        wallet_address: await signer.getAddress(),
+      };
+
+      await axios.post("/add-wallet-address", data);
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(error);
+      const message =
+        (error.response && error.response.data && error.response.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -67,6 +92,19 @@ export const authSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.user = null;
+      })
+      .addCase(connectWallet.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(connectWallet.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = { ...state.user, ...action.payload };
+      })
+      .addCase(connectWallet.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       });
   },
 });

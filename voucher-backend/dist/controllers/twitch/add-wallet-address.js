@@ -4,7 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const isAuthorised = async (req, res) => {
+const twitch_users_1 = __importDefault(require("../../models/twitch-users"));
+const AddWalletAddress = async (req, res) => {
     if (!req.cookies["TWITCH_ACCESS_TOKEN"]) {
         res.send({ error: "Cookie not found" });
     }
@@ -18,12 +19,16 @@ const isAuthorised = async (req, res) => {
                     Authorization: "Bearer " + access_token,
                 },
             });
-            res.send({ message: "valid access token" });
+            const response = await twitch_users_1.default.findOneAndUpdate({ id: req.body.id }, { wallet_address: req.body.wallet_address });
+            console.log(response);
+            res.send({ message: "updated wallet address" });
         }
         catch (error) {
-            res.send({ message: error.response.data.message });
+            console.log(error);
+            res.send({ message: error });
         }
     }
+    return res.send();
 };
-exports.default = isAuthorised;
-//# sourceMappingURL=isAuthorised.js.map
+exports.default = AddWalletAddress;
+//# sourceMappingURL=add-wallet-address.js.map

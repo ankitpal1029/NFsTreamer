@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import axios from "axios";
+import TwitchUser from "../../models/twitch-users";
 
-const isAuthorised = async (req: Request, res: Response) => {
+const AddWalletAddress = async (req: Request, res: Response) => {
   if (!req.cookies["TWITCH_ACCESS_TOKEN"]) {
     // cookie isn't there so generate a new one
     res.send({ error: "Cookie not found" });
@@ -16,11 +17,18 @@ const isAuthorised = async (req: Request, res: Response) => {
         },
       });
 
-      res.send({ message: "valid access token" });
+      const response = await TwitchUser.findOneAndUpdate(
+        { id: req.body.id },
+        { wallet_address: req.body.wallet_address }
+      );
+      console.log(response);
+      res.send({ message: "updated wallet address" });
     } catch (error) {
-      res.send({ message: error.response.data.message });
+      console.log(error);
+      res.send({ message: error });
     }
   }
+  return res.send();
 };
 
-export default isAuthorised;
+export default AddWalletAddress;
