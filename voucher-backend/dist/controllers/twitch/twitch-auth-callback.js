@@ -24,14 +24,7 @@ const TwitchAuthCallback = async (req, res) => {
             profile_image_url: res.data.data[0].profile_image_url,
             wallet_address: "0x0",
         };
-        const queryRes = await twitch_users_1.default.findOne({ id: res.data.data[0].id }, (err) => {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                console.log("Twitch User already exists");
-            }
-        });
+        const queryRes = await twitch_users_1.default.findOne({ id: res.data.data[0].id });
         if (!queryRes) {
             twitch_users_1.default.create(insertData, (err, _) => {
                 if (err) {

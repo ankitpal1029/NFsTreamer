@@ -28,13 +28,13 @@ const TwitchAuthCallback = async (req: Request, res: Response) => {
     // search if that id is there already in db
     const queryRes = await TwitchUser.findOne(
       { id: res.data.data[0].id },
-      (err: any) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("Twitch User already exists");
-        }
-      }
+      // (err: any) => {
+      //   if (err) {
+      //     console.log(err);
+      //   } else {
+      //     console.log("Twitch User already exists");
+      //   }
+      // }
     );
     if (!queryRes) {
       // add data to db

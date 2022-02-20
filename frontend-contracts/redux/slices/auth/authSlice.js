@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../lib/axios_config";
+import Web3Modal from "web3modal";
+import { ethers } from "ethers";
+import { ShortenAddress } from "../../../lib/shorten_address";
 
 const initialState = {
   user: null,
@@ -13,7 +16,22 @@ export const login = createAsyncThunk("auth/login", async (thunkAPI) => {
   try {
     const response = await axios.get("/auth/twitch/get-user");
 
-    return response.data.user;
+    const web3Modal = new Web3Modal({
+      network: "mainnet",
+      cacheProvider: true,
+    });
+
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
+    const data = {
+      ...response.data.user,
+      wallet_address: ShortenAddress(await signer.getAddress()),
+    };
+
+    // return response.data.user;
+    return data;
   } catch (error) {
     console.log(error);
     const message =
