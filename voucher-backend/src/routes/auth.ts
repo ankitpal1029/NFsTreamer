@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get("/auth/twitch/callback", TwitchAuthCallback);
 router.get("/auth/twitch/get-user", ReturnTwitchUser);
-router.post("auth/twitch/logout", LogoutUser);
+router.get("/auth/twitch/logout", LogoutUser);
 router.get("/auth/twitch/isAuth", isAuthorised);
 router.post("/add-wallet-address", AddWalletAddress);
 

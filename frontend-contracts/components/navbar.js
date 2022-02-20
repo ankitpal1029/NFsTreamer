@@ -7,19 +7,28 @@ import { useSelector } from "react-redux";
 import { ShortenAddress } from "../lib/shorten_address";
 import withAuth from "../components/HOC/withAuth";
 import { useDispatch } from "react-redux";
-import { connectWallet } from "../redux/slices/auth/authSlice.js";
+import { connectWallet, logout } from "../redux/slices/auth/authSlice.js";
+import {useRouter } from "next/router";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
 
   const handleWalletConnect = (e) => {
-    console.log("clicked");
     e.preventDefault();
     dispatch(connectWallet());
   };
+
+  const handleLogout = (e) => {
+    console.log("clicked");
+    e.preventDefault();
+    dispatch(logout());
+    router.replace("/");
+  };
+
   return (
     <div>
       <nav className="border-b p-6 pb-3">
@@ -41,7 +50,10 @@ const Navbar = () => {
           <div className="flex flex-col">
             <div className="flex">
               <div>
-                <button className="bg-purple-600 border-2 border-black hover:bg-purple-900 text-white p-0.5 font-bold rounded flex items-center justify-around">
+                <button
+                  className="bg-purple-600 border-2 border-black hover:bg-purple-900 text-white p-0.5 font-bold rounded flex items-center justify-around"
+                  onClick={handleLogout}
+                >
                   <div className="text-center pl-1">
                     <span>Logout</span>
                   </div>

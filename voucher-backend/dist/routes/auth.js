@@ -12,7 +12,7 @@ const twitch_auth_callback_1 = __importDefault(require("../controllers/twitch/tw
 const router = express_1.default.Router();
 router.get("/auth/twitch/callback", twitch_auth_callback_1.default);
 router.get("/auth/twitch/get-user", return_twitch_user_1.default);
-router.post("auth/twitch/logout", logout_1.default);
+router.get("/auth/twitch/logout", logout_1.default);
 router.get("/auth/twitch/isAuth", isAuthorised_1.default);
 router.post("/add-wallet-address", add_wallet_address_1.default);
 exports.default = router;

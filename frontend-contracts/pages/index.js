@@ -27,7 +27,6 @@ const ListVouchers = () => {
   useEffect(() => {
     dispatch(login());
     axios.get("/fetchVouchers").then((response) => {
-      console.log(response);
       setVouchers(response.data.allVoucher);
     });
   }, []);
