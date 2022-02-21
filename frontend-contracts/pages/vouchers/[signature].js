@@ -132,4 +132,4 @@ const SingleVoucher = () => {
   //return(<p>signature</p>);
 };
 
-export default SingleVoucher;
+export default withAuth(SingleVoucher);

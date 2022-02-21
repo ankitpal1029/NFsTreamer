@@ -30,10 +30,11 @@ const VoucherSchema = new mongoose_1.default.Schema({
             required: true,
         },
     },
-    meta: { v_url: {
+    meta: {
+        v_url: {
             type: String,
             required: true,
-        }
+        },
     },
     signature: {
         type: String,
