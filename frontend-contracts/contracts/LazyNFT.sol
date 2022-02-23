@@ -33,6 +33,7 @@ contract LazyNFT is ERC721URIStorage, EIP712, Ownable, AccessControlEnumerable{
       uint256 price;
       string uri;
       string collection;
+      uint256 tier;
   }
   mapping(address => MarketItem[]) nftsOwned;
 
@@ -56,8 +57,8 @@ contract LazyNFT is ERC721URIStorage, EIP712, Ownable, AccessControlEnumerable{
     /// @notice The metadata URI to associate with this token.
     string uri;
     string collection;
+    uint256 tier;
   }
-
 
   function setNewMinter(address _addr) public onlyOwner{
     grantRole(MINTER_ROLE, _addr);
@@ -100,7 +101,8 @@ contract LazyNFT is ERC721URIStorage, EIP712, Ownable, AccessControlEnumerable{
                                           creator: signer, 
                                           price: voucher.minPrice, 
                                           uri: voucher.uri, 
-                                          collection: voucher.collection
+                                          collection: voucher.collection,
+                                          tier: voucher.tier
                                         });
     //nftsOwned[redeemer].push()
     nftsOwned[redeemer].push(newItemToPush);

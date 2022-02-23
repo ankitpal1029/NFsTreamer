@@ -13,11 +13,13 @@ const CreateVoucher = async (req, res) => {
             minPrice: x.voucher.minPrice,
             tokenId: x.voucher.tokenId,
             collection: x.voucher.collection,
+            tier: x.voucher.tier,
         },
         meta: x.meta,
         signature: x.signature,
         redeemed: false,
     }));
+    console.log("insertdata", insertData);
     try {
         const response = await voucher_1.default.insertMany(insertData);
         console.log(response);

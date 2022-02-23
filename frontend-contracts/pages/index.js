@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, Component, useEffect } from "react";
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
-import Card from "@mui/material/Card";
+import Card from "@mui/material/Card"; 
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -54,6 +57,7 @@ const ListVouchers = () => {
           value: voucher.minPrice,
         }
       );
+      console.log("redeeming!!!!!")
       console.log(res);
 
       try {
@@ -85,8 +89,9 @@ const ListVouchers = () => {
                   <div className="" key={index}>
                     <Card sx={{ maxWidth: 345 }} variant="outlined">
                       <CardHeader
-                        title="Banksy"
-                        subheader={v.voucher.collection + " collection"}
+                        //title="Banksy"
+                        title={v.voucher.collection + " collection"}
+                        subheader={"Tier "+v.voucher.tier}
                       />
                       <CardMedia
                         component="img"

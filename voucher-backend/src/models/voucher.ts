@@ -25,6 +25,10 @@ const VoucherSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    tier: {
+      type: Number,
+      required: true,
+    },
   },
   meta: {
     v_url: {
