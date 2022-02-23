@@ -10,6 +10,7 @@ interface IvoucherAPIData {
     };
     tokenId: Number;
     collection: String;
+    tier: Number;
   };
   meta: String;
   signature: String;
@@ -24,12 +25,13 @@ const CreateVoucher = async (req: Request, res: Response) => {
       minPrice: x.voucher.minPrice,
       tokenId: x.voucher.tokenId,
       collection: x.voucher.collection,
+      tier: x.voucher.tier,
     },
     meta: x.meta,
     signature: x.signature,
     redeemed: false,
   }));
-
+  console.log("insertdata",insertData)
   try {
     const response = await Voucher.insertMany(insertData);
     console.log(response);

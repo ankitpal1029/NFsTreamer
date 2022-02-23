@@ -8,6 +8,7 @@ interface INFTServerDetails {
     minPrice: BigNumber;
     uri: string;
     collection: string;
+    tier: Number;
   };
   signature: string;
   redeemed: boolean;
