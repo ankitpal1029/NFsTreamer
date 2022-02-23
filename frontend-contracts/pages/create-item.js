@@ -5,8 +5,14 @@ import { create as ipfsHttpClient } from "ipfs-http-client";
 import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
 const { LazyMinter } = require("../lib");
+import Box from '@mui/material/Box';
 
-import { nftaddress, nftmarketaddress } from "../config";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
+import { contract, deployer} from "../config";
 
 //import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 //import Market from "../artifacts/contracts/LazyNFTMarket.sol/LazyNFTMarket.json";
@@ -16,6 +22,9 @@ import axios from "../lib/axios_config";
 var cors = require('cors');
 //app.use(cors());
 //export default function CreateItem() {
+
+
+
 const CreateItem = () => {
   //const [cid, setCid] = useState(null);
   //const [IPFSurl, setIPFSurl] = useState(null);
@@ -27,6 +36,7 @@ const CreateItem = () => {
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
+    tier: "",
   });
 
   const router = useRouter();
@@ -38,7 +48,7 @@ const CreateItem = () => {
   }
 
   async function mint() {
-    const { name, price } = formInput;
+    const { name, price, tier } = formInput;
     //console.log(name)
     if (!name || !price) return;
 
@@ -51,7 +61,10 @@ const CreateItem = () => {
       const cid = added.path;
       console.log("logging CID");
       console.log(cid);
-      createSale(cid, name, price);
+
+      console.log("getting age",tier);
+
+      createSale(cid, name, price,tier);
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
@@ -60,7 +73,9 @@ const CreateItem = () => {
     console.log(fileURL);
   }
 
-  const createSale = async (cid, name, price) => {
+  
+
+  const createSale = async (cid, name, price,tier) => {
     const web3Modal = new Web3Modal({
       network: "mainnet",
       cacheProvider: true,
@@ -76,19 +91,19 @@ const CreateItem = () => {
     let tokenID = response.data.currId + 1;
 
     console.log("should be minter address", signer.getAddress());
-    console.log("nftaddress:",nftaddress);
 
     const lazyMinter = new LazyMinter({
-      contractAddress: nftaddress,
+      contractAddress: contract,
       signer: signer,
     });
 
     let objToSend = [];
-    const bigPrice = ethers.utils.parseUnits(price.toString(), "ether");
-    const { voucher, meta, signature } = await lazyMinter.createVoucher(
+    const bigPrice = ethers.utils.parseUnits(price.toString(), "ether"); 
+    const { voucher, meta, signature } = await lazyMinter.createVoucher( 
       tokenID,
       `ipfs://${cid}`,
       bigPrice,
+      tier,
       name
     );
     console.log("checking this on deploy ");
@@ -108,7 +123,7 @@ const CreateItem = () => {
       });
     } catch (err) {
       console.log(err);
-    }
+    } 
 
     router.push("/");
   };
@@ -116,7 +131,26 @@ const CreateItem = () => {
   return (
     <div className="flex justify-center">
       {vouchertoken}
+      
       <div className="w-1/2 flex flex-col pb-12">
+        {/*
+        <Box sx={{ minWidth: 120 }}>
+          <FormControl fullWidth>
+            <InputLabel>Tier level</InputLabel>
+            <Select
+              //value={tier}
+              label="Tier"
+              onChange={(e) =>
+                updateFormInput({ ...formInput, tier : e.target.value })
+              }
+            >
+              <MenuItem value={1}>Tier One</MenuItem>
+              <MenuItem value={2}>Tier Two</MenuItem>
+              <MenuItem value={3}>Tier Three</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+            */}
         <input
           placeholder="Asset Name"
           className="mt-8 border rounded p-4"
@@ -133,6 +167,7 @@ const CreateItem = () => {
           }
         />
         */}
+        
         <input
           placeholder="Asset Price in ETH"
           className="mt-2 border rounded p-4"
@@ -141,11 +176,20 @@ const CreateItem = () => {
           }
         />
         <input
+          placeholder="Tier"
+          className="mt-2 border rounded p-4"
+          onChange={(e) =>
+            updateFormInput({ ...formInput, tier: e.target.value })
+          }
+        />
+        <input
           type="file"
           name="Asset"
           className="my-4"
           onChange={(e) => onChange(e)}
         />
+
+        
         <img className="rounded mt-4" width="350" src={fileURL} />
         <button
           className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg"

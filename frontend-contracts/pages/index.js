@@ -1,7 +1,10 @@
 import { useState, Component, useEffect } from "react";
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
-import Card from "@mui/material/Card";
+import Card from "@mui/material/Card"; 
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -17,7 +20,7 @@ chai.use(solidity);
 import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 import axios from "../lib/axios_config";
 //import LazyNFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
-import { nftaddress } from "../config";
+import { contract, deployer } from "../config";
 
 const ListVouchers = () => {
   const [vouchers, setVouchers] = useState([]);
@@ -40,7 +43,7 @@ const ListVouchers = () => {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    const lazynftContract = new ethers.Contract(nftaddress, NFT.abi, signer);
+    const lazynftContract = new ethers.Contract(contract, NFT.abi, signer);
 
     try {
       const res = await lazynftContract.redeem(

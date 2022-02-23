@@ -8,6 +8,7 @@ const { TypedDataUtils } = require("ethers-eip712");
 //import { NFTStorage,Blob } from 'nft.storage/dist/bundle.esm.min.js'
 
 //import NFTStorage from 'nft.storage/dist/bundle.esm.min.js';
+
 const {
   NFTStorage, 
   Blob,
@@ -74,14 +75,15 @@ class LazyMinter {
     };
   }
 
-  async createVoucher(tokenId, uri, minPrice = 0, collection) {
-    const voucher = { tokenId, minPrice, uri, collection };
+  async createVoucher(tokenId, uri, minPrice = 0, tier, collection) {
+    const voucher = { tokenId, minPrice, uri,tier, collection };
     
     const voucher_json = {
       "name": collection, 
       "tokenId":tokenId, 
       "minPrice":minPrice, 
-      "image": uri 
+      "image": uri,
+      "tier": tier
     };
     
     
