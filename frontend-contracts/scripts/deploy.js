@@ -2,7 +2,7 @@ const hre = require("hardhat");
 const fs = require("fs");
 
 async function main() {
-  const [deployer, _] = await ethers.getSigners();
+  const [_, deployer] = await ethers.getSigners();
 
   const NFT = await ethers.getContractFactory("LazyNFT", deployer);
   const nft = await NFT.deploy();

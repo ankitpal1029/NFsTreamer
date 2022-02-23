@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 
 import { useRouter } from "next/router";
+
 import Web3Modal from "web3modal";
 const { LazyMinter } = require("../lib");
 import Box from '@mui/material/Box';
@@ -14,25 +15,17 @@ import Select from '@mui/material/Select';
 
 import { contract, deployer} from "../config";
 
-//import NFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
-//import Market from "../artifacts/contracts/LazyNFTMarket.sol/LazyNFTMarket.json";
+import Navbar from "../components/navbar";
+import withAuth from "../components/HOC/withAuth";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 import axios from "../lib/axios_config";
-var cors = require('cors');
-//app.use(cors());
-//export default function CreateItem() {
-
 
 
 const CreateItem = () => {
-  //const [cid, setCid] = useState(null);
-  //const [IPFSurl, setIPFSurl] = useState(null);
   const [file, setFile] = useState(null);
-  const [cid, setCid] = useState(null);
   const [displayURL, setdisplayURL] = useState(null);
   const [fileURL, setFileURL] = useState(null);
-  const [vouchertoken, setVoucherToken] = useState(null);
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
@@ -68,9 +61,6 @@ const CreateItem = () => {
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
-    console.log("Fileurl");
-    console.log(cid);
-    console.log(fileURL);
   }
 
   
@@ -84,10 +74,9 @@ const CreateItem = () => {
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
-    console.log("here")
+
+    console.log(signer);
     let response = await axios.get("/getCurrentId");
-    console.log("here")
-    console.log(response.data);
     let tokenID = response.data.currId + 1;
 
     console.log("should be minter address", signer.getAddress());
@@ -97,8 +86,10 @@ const CreateItem = () => {
       signer: signer,
     });
 
+    console.log("This address is signing", await signer.getAddress());
     let objToSend = [];
     const bigPrice = ethers.utils.parseUnits(price.toString(), "ether"); 
+    console.log("sending to index.js")
     const { voucher, meta, signature } = await lazyMinter.createVoucher( 
       tokenID,
       `ipfs://${cid}`,
@@ -106,17 +97,14 @@ const CreateItem = () => {
       tier,
       name
     );
-    console.log("checking this on deploy ");
-    console.log("voucher:", voucher);
-    console.log("signature:", signature);
+
+    console.log("pushing to db")
     objToSend.push({
       voucher,
       meta,
       signature,
-      //ipfs: `ipfs://${cid}`,
-      //tokenID,
     });
-
+    console.log("done pushing")
     try {
       const res = await axios.post("/addVoucher", {
         data: objToSend,
@@ -124,33 +112,15 @@ const CreateItem = () => {
     } catch (err) {
       console.log(err);
     } 
-
+    console.log("finally!!!")
     router.push("/");
   };
 
   return (
     <div className="flex justify-center">
-      {vouchertoken}
       
       <div className="w-1/2 flex flex-col pb-12">
-        {/*
-        <Box sx={{ minWidth: 120 }}>
-          <FormControl fullWidth>
-            <InputLabel>Tier level</InputLabel>
-            <Select
-              //value={tier}
-              label="Tier"
-              onChange={(e) =>
-                updateFormInput({ ...formInput, tier : e.target.value })
-              }
-            >
-              <MenuItem value={1}>Tier One</MenuItem>
-              <MenuItem value={2}>Tier Two</MenuItem>
-              <MenuItem value={3}>Tier Three</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-            */}
+
         <input
           placeholder="Asset Name"
           className="mt-8 border rounded p-4"
@@ -158,15 +128,7 @@ const CreateItem = () => {
             updateFormInput({ ...formInput, name: e.target.value })
           }
         />
-        {/*
-        <textarea
-          placeholder="Asset Description"
-          className="mt-2 border rounded p-4"
-          onChange={(e) =>
-            updateFormInput({ ...formInput, description: e.target.value })
-          }
-        />
-        */}
+
         
         <input
           placeholder="Asset Price in ETH"
@@ -203,4 +165,4 @@ const CreateItem = () => {
   );
 };
 
-export default CreateItem;
+export default withAuth(CreateItem);

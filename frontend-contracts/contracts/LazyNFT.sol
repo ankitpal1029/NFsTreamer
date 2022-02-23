@@ -57,6 +57,7 @@ contract LazyNFT is ERC721URIStorage, EIP712, Ownable, AccessControlEnumerable{
     /// @notice The metadata URI to associate with this token.
     string uri;
     string collection;
+    uint256 tier;
   }
 
   function setNewMinter(address _addr) public onlyOwner{
@@ -79,6 +80,7 @@ contract LazyNFT is ERC721URIStorage, EIP712, Ownable, AccessControlEnumerable{
   function redeem(address redeemer, NFTVoucher calldata voucher, NFTCID calldata meta,bytes memory signature) public payable returns (uint256) {
     // make sure signature is valid and get the address of the signer
     address signer = _verify(meta, signature);
+    console.log("The signer is: ", signer);
 
 
     // make sure that the signer is authorized to mint NFTs
