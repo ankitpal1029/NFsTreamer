@@ -10,7 +10,7 @@ const withAuth = (WrappedComponent) => {
         if (res.data.message === "valid access token") {
           return <WrappedComponent {...props} />;
         } else {
-          router.replace("/signin");
+          router.push("/signin");
         }
       });
     });
