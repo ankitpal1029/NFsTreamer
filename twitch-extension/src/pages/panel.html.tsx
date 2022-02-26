@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import "./panel.html.css";
 import Messages from "../components/panel/messages/messages";
-import { useTheme } from "@mui/material";
-import RestoreIcon from "@mui/icons-material/Restore";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ChatIcon from "@mui/icons-material/Chat";
+// import { useTheme } from "@mui/material";
+// import RestoreIcon from "@mui/icons-material/Restore";
+// import FavoriteIcon from "@mui/icons-material/Favorite";
+// import ChatIcon from "@mui/icons-material/Chat";
 import UserNFT from "../components/user-nft/user-nft";
-import AvailableNFTs from "../components/available-nfts/available-nfts";
+// import AvailableNFTs from "../components/available-nfts/available-nfts";
 import { baseURL } from "../lib/axios_config";
 
 declare global {
@@ -40,14 +40,14 @@ let socket: any;
       switch (tab) {
         case 0:
                 return (
-                <div id="first" className="p-4">
+                <div id="first" className="p-1">
                     <Messages messages={messages} name={userId} />
                 </div>
                 );
 
         case 1:
                 return (
-                  <div id="first" className="p-4">
+                  <div id="first" className="p-1">
                    <UserNFT setMessage={setMessage} sendMessage={sendMessage} />
                   </div>
                   );
@@ -61,7 +61,7 @@ let socket: any;
       switch(tab){
           case 0: // underline 0
             return (
-              <ul id="tabs" className="inline-flex w-full px-1 pt-2 ">
+              <ul id="tabs" className="flex justify-around w-full px-1">
                 <li className={`px-4 py-2 -mb-px font-semibold text-purple-800  border-purple-400 rounded-t border-b-2`}
                   onClick={() => handleChange(0)}>
                   Live Chat
@@ -74,7 +74,7 @@ let socket: any;
               )
           case 1: // underline 1
             return (
-              <ul id="tabs" className="inline-flex w-full px-1 pt-2 ">
+              <ul id="tabs" className="flex justify-around w-full px-1 ">
                 <li className={`px-4 py-2 font-semibold text-purple-800  border-purple-400 rounded-t opacity-50`}
                   onClick={() => handleChange(0)}>
                   Live Chat
@@ -155,7 +155,7 @@ const PanelView: React.FC = () => {
   }
 
     return(
-    <div className="w-auto mx-auto mt-4  rounded">
+    <div className="w-screen mx-auto mt-4  rounded">
     <TabHeader handleChange={handleChange} tab={tabNumber}/>
       <div id="tab-contents">
         <Panel tab={tabNumber} messages={messages} userId={userId} setMessage={setMessage} sendMessage={sendMessage}/>

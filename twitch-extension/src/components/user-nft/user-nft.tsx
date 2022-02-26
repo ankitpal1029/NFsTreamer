@@ -81,7 +81,7 @@ const UserNFT = ({
         ) : (
           <div className="bg-black border rounded-xl overflow-hidden ">
             <div className="p-1 bg-black text-xs">
-              <p className="text-2xl font-bold text-white">
+              <p className="text-2xl font-bold text-white text-center">
                 You don't own any NFTs
               </p>
             </div>

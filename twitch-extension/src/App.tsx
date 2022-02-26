@@ -1,7 +1,7 @@
 import "./App.css";
 import * as React from "react";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import PanelView from "./pages/panel.html";
 
 function App() {
