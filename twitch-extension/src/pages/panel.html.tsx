@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import "./panel.html.css";
-import InfoBar from "../components/panel/infobar/infobar";
-import Input from "../components/panel/input/input";
 import Messages from "../components/panel/messages/messages";
-import { AppBar, Box, Tab, Tabs, Typography, useTheme } from "@mui/material";
-import SwipeableViews from "react-swipeable-views";
+import { useTheme } from "@mui/material";
 import RestoreIcon from "@mui/icons-material/Restore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatIcon from "@mui/icons-material/Chat";
@@ -26,48 +23,81 @@ interface IMessageFormat {
 
 let socket: any;
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  dir?: string;
-  index: number;
-  value: number;
-}
 
-//function a11yProps(index: number) {
-//return {
-//id: `full-width-tab-${index}`,
-//"aria-controls": `full-width-tabpanel-${index}`,
-//};
-//}
+  const Panel = ({
+    tab, 
+    messages, 
+    userId, 
+    setMessage, 
+    sendMessage
+    }: {
+      tab: number, 
+      messages: IMessageFormat[], 
+      userId: string,
+      setMessage: React.Dispatch<React.SetStateAction<string>>,
+      sendMessage: (event: any) => void
+    }) => {
+      switch (tab) {
+        case 0:
+                return (
+                <div id="first" className="p-4">
+                    <Messages messages={messages} name={userId} />
+                </div>
+                );
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+        case 1:
+                return (
+                  <div id="first" className="p-4">
+                   <UserNFT setMessage={setMessage} sendMessage={sendMessage} />
+                  </div>
+                  );
+        default:
+        return(<div>error</div>);
+        
+      }
+    }
 
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      //aria-labelledby={`full-width-tab-${index}`}
-      className="w-full"
-      {...other}
-    >
-      {value === index && <Box sx={{ marginTop: 10 }}>{children}</Box>}
-    </div>
-  );
-}
+  const TabHeader = ({handleChange, tab}: {handleChange: (newValue: number) => void, tab: number}) => {
+      switch(tab){
+          case 0: // underline 0
+            return (
+              <ul id="tabs" className="inline-flex w-full px-1 pt-2 ">
+                <li className={`px-4 py-2 -mb-px font-semibold text-purple-800  border-purple-400 rounded-t border-b-2`}
+                  onClick={() => handleChange(0)}>
+                  Live Chat
+                </li>
+                <li className={`px-4 py-2 font-semibold text-purple-800 rounded-t opacity-50`} 
+                  onClick={() => handleChange(1)}>
+                  My NFTs
+                </li>
+              </ul>
+              )
+          case 1: // underline 1
+            return (
+              <ul id="tabs" className="inline-flex w-full px-1 pt-2 ">
+                <li className={`px-4 py-2 font-semibold text-purple-800  border-purple-400 rounded-t opacity-50`}
+                  onClick={() => handleChange(0)}>
+                  Live Chat
+                </li>
+                <li className={`px-4 py-2 -mb-px font-semibold text-purple-800 rounded-t  border-b-2`} 
+                  onClick={() => handleChange(1)}>
+                  My NFTs
+                </li>
+              </ul>
+              )
+          default: 
+                return <div>error</div>
+        }
+    }
 
 const PanelView: React.FC = () => {
   const room = "something";
   const [userId, setUserId] = useState("not on twitch");
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<IMessageFormat[]>([]);
-  //const ENDPOINT = "http://localhost:5000";
-  // const ENDPOINT = "https://nft-streamer-backend.herokuapp.com";
   const ENDPOINT = baseURL;
 
-  const theme = useTheme();
-  const [value, setValue] = React.useState(0);
+  const [tabNumber, setTabNumber] = React.useState<number>(0);
 
   useEffect(() => {
     if (window.Twitch) {
@@ -92,8 +122,7 @@ const PanelView: React.FC = () => {
         alert(error);
       }
     });
-    //window.Twitch.ext.rig.log(socket);
-    //console.log("socket data", socket);
+
     return () => {
       socket.disconnect();
       socket.off();
@@ -120,75 +149,21 @@ const PanelView: React.FC = () => {
     console.log(message, messages);
   };
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
 
-  const handleChangeIndex = (index: number) => {
-    console.log(value);
-    setValue(index);
-  };
+  const handleChange = (newValue: number) => {
+      setTabNumber(newValue);
+  }
 
-  return (
-    <div className="outerContainer">
-      <div className="container">
-        {/*<InfoBar room={room} />*/}
-
-        <AppBar>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            indicatorColor="secondary"
-            textColor="inherit"
-            variant="scrollable"
-            scrollButtons="auto"
-            aria-label="full width tabs example"
-          >
-            <Tab
-              style={{ fontSize: "10px" }}
-              label="Recent NFTs"
-              //{...a11yProps(0)}
-              icon={<RestoreIcon />}
-            />
-            <Tab
-              style={{ fontSize: "10px" }}
-              label="My NFTs"
-              //{...a11yProps(1)}
-              icon={<FavoriteIcon />}
-            />
-            <Tab
-              style={{ fontSize: "10px" }}
-              label="Live Chat"
-              //{...a11yProps(2)}
-              icon={<ChatIcon />}
-            />
-          </Tabs>
-        </AppBar>
-        <SwipeableViews
-          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-          index={value}
-          onChangeIndex={handleChangeIndex}
-        >
-          <TabPanel value={value} index={0} dir={theme.direction}>
-            <AvailableNFTs />
-          </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction}>
-            <UserNFT setMessage={setMessage} sendMessage={sendMessage} />
-          </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction}>
-            <Box>
-              <Messages messages={messages} name={userId} />
-            </Box>
-            {/*<Input
-              message={message}
-              setMessage={setMessage}
-              sendMessage={sendMessage}
-              />*/}
-          </TabPanel>
-        </SwipeableViews>
+    return(
+    <div className="w-auto mx-auto mt-4  rounded">
+    <TabHeader handleChange={handleChange} tab={tabNumber}/>
+      <div id="tab-contents">
+        <Panel tab={tabNumber} messages={messages} userId={userId} setMessage={setMessage} sendMessage={sendMessage}/>
       </div>
     </div>
-  );
+    );
+
+
 };
 
 export default PanelView;

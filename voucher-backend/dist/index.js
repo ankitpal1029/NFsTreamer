@@ -21,7 +21,7 @@ const main = async () => {
     app.use(express_1.default.json());
     app.use((0, cookie_parser_1.default)());
     app.use((0, cors_1.default)({
-        origin: constants_1.MARKETPLACE_CORS,
+        origin: [constants_1.MARKETPLACE_CORS, constants_1.FRONTEND_CORS],
         credentials: true,
     }));
     mongoose_1.default.connect(`${constants_1.DB_CONNECTION}`, () => {

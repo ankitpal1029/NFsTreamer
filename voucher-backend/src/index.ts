@@ -29,7 +29,7 @@ const main = async () => {
   app.use(
     cors({
       //origin: [MARKETPLACE_CORS as string, FRONTEND_CORS as string],
-      origin: MARKETPLACE_CORS,
+      origin: [MARKETPLACE_CORS as string, FRONTEND_CORS as string],
       credentials: true,
     })
   );
