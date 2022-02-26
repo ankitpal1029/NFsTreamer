@@ -21,6 +21,11 @@ interface IMessageFormat {
   text: string;
 }
 
+export interface IMessageToBeSent {
+    message?: string;
+    points?: number;
+  }
+
 let socket: any;
 
 
@@ -28,14 +33,14 @@ let socket: any;
     tab, 
     messages, 
     userId, 
-    setMessage, 
+    // setMessage, 
     sendMessage
     }: {
       tab: number, 
       messages: IMessageFormat[], 
       userId: string,
-      setMessage: React.Dispatch<React.SetStateAction<string>>,
-      sendMessage: (event: any) => void
+      // setMessage: React.Dispatch<React.SetStateAction<IMessageToBeSent>>,
+      sendMessage: (event: any, message: IMessageToBeSent) => void
     }) => {
       switch (tab) {
         case 0:
@@ -48,7 +53,7 @@ let socket: any;
         case 1:
                 return (
                   <div id="first" className="p-1">
-                   <UserNFT setMessage={setMessage} sendMessage={sendMessage} />
+                   <UserNFT  sendMessage={sendMessage} />
                   </div>
                   );
         default:
@@ -93,7 +98,7 @@ let socket: any;
 const PanelView: React.FC = () => {
   const room = "something";
   const [userId, setUserId] = useState("not on twitch");
-  const [message, setMessage] = useState<string>("");
+  // const [message, setMessage] = useState<IMessageToBeSent>({message: "", points: 0});
   const [messages, setMessages] = useState<IMessageFormat[]>([]);
   const ENDPOINT = baseURL;
 
@@ -139,11 +144,12 @@ const PanelView: React.FC = () => {
     );
   });
 
-  const sendMessage = (event: any) => {
-    event.preventDefault();
+  const sendMessage = async(event: any, message: IMessageToBeSent) => {
+    console.log("sendMessage called");
     if (message) {
-      socket.emit("sendMessage", message, () => {
-        setMessage("");
+      await socket.emit("sendMessage", message, () => {
+        console.log("done");
+        // setMessage({message: "", points: 0});
       });
     }
     console.log(message, messages);
@@ -158,7 +164,7 @@ const PanelView: React.FC = () => {
     <div className="w-screen mx-auto mt-4  rounded">
     <TabHeader handleChange={handleChange} tab={tabNumber}/>
       <div id="tab-contents">
-        <Panel tab={tabNumber} messages={messages} userId={userId} setMessage={setMessage} sendMessage={sendMessage}/>
+        <Panel tab={tabNumber} messages={messages} userId={userId}  sendMessage={sendMessage}/>
       </div>
     </div>
     );

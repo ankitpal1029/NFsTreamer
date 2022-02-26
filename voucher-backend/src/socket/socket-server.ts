@@ -1,5 +1,11 @@
 import { Server, Socket } from "socket.io";
 import { addUser, removeUser, getUser, getUsersInRoom } from "../socket/users";
+import TwitchUser from "../models/twitch-users";
+
+export interface IMessageRecieved {
+  message?: string;
+  points?: number;
+}
 
 const SocketServer = (io: Server) => {
   // socketio logic
@@ -28,17 +34,35 @@ const SocketServer = (io: Server) => {
       callback();
     });
 
-    socket.on("sendMessage", (message: any, callback: any) => {
-      const user = getUser(socket.id);
+    socket.on(
+      "sendMessage",
+      async (message: IMessageRecieved, callback: any) => {
+        const user = getUser(socket.id);
 
-      if (user) {
-        io.to(user!.room).emit("message", { user: user?.name, text: message });
-      } else {
-        console.log("this user isn't there in the room");
+        if (user) {
+          // increase points according to message.points in db
+          try {
+            const updatedPoints = await TwitchUser.findOneAndUpdate(
+              { id: user?.name.split("U")[1] },
+              { points: message?.points }
+            );
+            // check if user has passed any threshold
+            // if they pass then send a message for the same
+            // if not then do nothing
+          } catch (err) {
+            console.log(err);
+          }
+          io.to(user!.room).emit("message", {
+            user: user?.name,
+            text: message?.message,
+          });
+        } else {
+          console.log("this user isn't there in the room");
+        }
+
+        callback();
       }
-
-      callback();
-    });
+    );
 
     socket.on("disconnect", () => {
       console.log(`User just left`);
