@@ -5,13 +5,13 @@ import "./messages.css";
 interface IMessageFormat {
   user: string;
   text: string;
+  type: string;
 }
 
 const Messages = ({
   messages,
   name,
-}: //name,
-{
+}: {
   messages: IMessageFormat[];
   name: string;
 }) => {
@@ -19,11 +19,14 @@ const Messages = ({
 
   useEffect(() => {
     if (divRef.current != null) {
-      divRef.current.scrollIntoView({ behavior: "smooth" });
+      divRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
     }
   });
   return (
-    <div className="w-full">
+    <div className="w-screen h-56 overflow-y-auto">
       {messages.map((msg, i) => (
         <div key={i}>
           <Message message={msg} name={name} />

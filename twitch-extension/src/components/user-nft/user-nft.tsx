@@ -1,26 +1,28 @@
 import { BigNumber, ethers } from "ethers";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Web3Modal from "web3modal";
 
 import { lazynftaddress } from "../../config";
 
 import LazyNFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
+import { IMessageToBeSent } from "../../pages/panel.html";
 
 interface INFTDetails {
   collection: string;
   creator: string;
   owner: string;
   price: BigNumber;
+  tier: number;
   tokenId: string;
   uri: string;
 }
 
 const UserNFT = ({
-  setMessage,
+  // setMessage,
   sendMessage,
 }: {
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
-  sendMessage: (event: any) => void;
+  // setMessage: React.Dispatch<React.SetStateAction<IMessageToBeSent>>;
+  sendMessage: (event: any, message: IMessageToBeSent) => void;
 }) => {
   const [nfts, setNFTs] = useState<INFTDetails[]>([]);
   useEffect(() => {
@@ -46,16 +48,17 @@ const UserNFT = ({
     console.log(lazynftContract);
 
     const nftsOwned = await lazynftContract.fetchNFTsOwned(signer.getAddress());
-    console.log("nfts owned", nftsOwned[0]);
+    console.log(await signer.getAddress());
+    console.log("nfts owned", nftsOwned);
     setNFTs(nftsOwned);
   };
 
-  const sendMessageToChat = (event: any, uri: string) => {
-    setMessage(uri);
-    sendMessage(event);
+  const sendMessageToChat = (event: any, uri: string, tier: number) => {
+    // setMessage({message: uri, points: tier*0.1});
+    sendMessage(event, {message:uri, points: tier*2 });
   };
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center w-screen h-56 overflow-y-auto">
       <div className="p-4">
         {nfts.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
@@ -63,7 +66,7 @@ const UserNFT = ({
               <div
                 key={i}
                 className="bg-black border rounded-xl overflow-hidden "
-                onClick={(event) => sendMessageToChat(event, nft.uri)}
+                onClick={(event) => sendMessageToChat(event, nft.uri, nft.tier)}
               >
                 <img
                   src={`https://ipfs.io/ipfs/${nft.uri.split("//")[1]}`}
@@ -71,8 +74,8 @@ const UserNFT = ({
                   className="rounded"
                 />
                 <div className="p-1 bg-black text-xs">
-                  <p className="text-2xl font-bold text-white">
-                    Click for User Chat
+                  <p className="text-xl font-bold text-white text-center">
+                    Double Click to use Emote
                   </p>
                 </div>
               </div>
@@ -81,7 +84,7 @@ const UserNFT = ({
         ) : (
           <div className="bg-black border rounded-xl overflow-hidden ">
             <div className="p-1 bg-black text-xs">
-              <p className="text-2xl font-bold text-white">
+              <p className="text-2xl font-bold text-white text-center">
                 You don't own any NFTs
               </p>
             </div>
