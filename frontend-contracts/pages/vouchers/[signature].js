@@ -10,8 +10,9 @@ import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 
 import NFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
-import { nftaddress } from "../../newconfig";
+import { contract } from "../../config";
 import axios from "../../lib/axios_config";
+import withAuth from "../../components/HOC/withAuth";
 
 const SingleVoucher = () => {
   const router = useRouter();
@@ -43,7 +44,7 @@ const SingleVoucher = () => {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    const lazynftContract = new ethers.Contract(nftaddress, NFT.abi, signer);
+    const lazynftContract = new ethers.Contract(contract, NFT.abi, signer);
 
     try {
       const res = await lazynftContract.redeem(

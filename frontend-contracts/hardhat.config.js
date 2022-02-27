@@ -15,7 +15,10 @@ module.exports = {
     hardhat: {
       chainId: 1337,
     },
-    
+     mumbai: {
+      url: "https://rpc-mumbai.maticvigil.com",
+      accounts: [process.env.TESTNET_DEPLOY_PRIVATE_KEY]
+    }
   },
   solidity: "0.8.4",
 };

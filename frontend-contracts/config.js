@@ -1,3 +1,3 @@
-export const contract= "0x8464135c8F25Da09e49BC8782676a84730C318bC"
-export const deployer= "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+export const contract= "0x5B63799C7ba300b483095411861f1327699337A8"
+export const deployer= "0x10EE8C1E4a11c92B26109eff8cdb4e47940482C5"
   
