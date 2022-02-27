@@ -11,7 +11,7 @@ const CallbackAuth = () => {
       var access_token = parsedHash.get("access_token");
       console.log(access_token);
       try {
-        axios.get(`/auth/twitch/callback?access_token=${access_token}`);
+        await axios.get(`/auth/twitch/callback?access_token=${access_token}`);
         Router.push("/");
       } catch (error) {
         console.log(error);
