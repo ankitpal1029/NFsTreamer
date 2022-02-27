@@ -40,8 +40,6 @@ const TwitchAuthCallback = async (req, res) => {
         console.log(error);
     }
     res.status(200).cookie("TWITCH_ACCESS_TOKEN", access_token, {
-        secure: true,
-        httpOnly: true,
         maxAge: 60 * 60 * 1000,
     });
     return res.send();
