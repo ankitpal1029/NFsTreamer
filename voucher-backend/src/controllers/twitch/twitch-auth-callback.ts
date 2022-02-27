@@ -15,6 +15,7 @@ const TwitchAuthCallback = async (req: Request, res: Response) => {
         Authorization: "Bearer " + access_token,
       },
     });
+    console.log(res);
 
     const insertData = {
       id: res.data.data[0].id,
@@ -51,7 +52,6 @@ const TwitchAuthCallback = async (req: Request, res: Response) => {
   }
 
   res.status(200).cookie("TWITCH_ACCESS_TOKEN", access_token, {
-    httpOnly: true,
     maxAge: 60*60*1000,
   });
   return res.send();
