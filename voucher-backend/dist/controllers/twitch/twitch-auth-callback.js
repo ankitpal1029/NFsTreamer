@@ -40,6 +40,7 @@ const TwitchAuthCallback = async (req, res) => {
         console.log(error);
     }
     res.status(200).cookie("TWITCH_ACCESS_TOKEN", access_token, {
+        domain: ".herokuapp.com",
         maxAge: 60 * 60 * 1000,
     });
     return res.send();
