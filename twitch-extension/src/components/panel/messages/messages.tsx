@@ -5,6 +5,7 @@ import "./messages.css";
 interface IMessageFormat {
   user: string;
   text: string;
+  type: string;
 }
 
 const Messages = ({

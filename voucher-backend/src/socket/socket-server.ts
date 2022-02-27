@@ -1,10 +1,22 @@
 import { Server, Socket } from "socket.io";
 import { addUser, removeUser, getUser, getUsersInRoom } from "../socket/users";
 import TwitchUser from "../models/twitch-users";
+import EvaluateTier from "../lib/evaluate-tier";
 
 export interface IMessageRecieved {
-  message?: string;
-  points?: number;
+  message: string;
+  points: number;
+}
+
+export interface ITwitchUser {
+  _id: any;
+  id: number;
+  email: string;
+  display_name: string;
+  wallet_address: string;
+  points: number;
+  profile_image_url: string;
+  __v: number;
 }
 
 const SocketServer = (io: Server) => {
@@ -41,20 +53,30 @@ const SocketServer = (io: Server) => {
 
         if (user) {
           // increase points according to message.points in db
+          console.log(message?.points);
           try {
+            const prevPoints = await TwitchUser.find({id: user?.name.split("U")[1]});
             const updatedPoints = await TwitchUser.findOneAndUpdate(
               { id: user?.name.split("U")[1] },
-              { points: message?.points }
+              { points: message?.points + prevPoints[0]?.points}
             );
-            // check if user has passed any threshold
-            // if they pass then send a message for the same
-            // if not then do nothing
+            console.log(updatedPoints);
+            const tier = EvaluateTier( message?.points as number, prevPoints[0].points);
+            console.log(tier, updatedPoints);
+            if (tier !== "No Upgrade") {
+              io.to(user!.room).emit("message", {
+                user: "Admin",
+                text: `Congratulations! ${user?.name} on hitting ${tier}`,
+                type: "upgrade",
+              });
+            }
           } catch (err) {
             console.log(err);
           }
           io.to(user!.room).emit("message", {
             user: user?.name,
             text: message?.message,
+            type: "emote",
           });
         } else {
           console.log("this user isn't there in the room");

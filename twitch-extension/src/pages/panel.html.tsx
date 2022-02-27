@@ -19,7 +19,7 @@ declare global {
 interface IMessageFormat {
   user: string;
   text: string;
-}
+  type: string; }
 
 export interface IMessageToBeSent {
     message?: string;
@@ -122,7 +122,7 @@ const PanelView: React.FC = () => {
     socket = io(`${ENDPOINT}`, {
       path: "/chat",
     });
-    socket.emit("join", { name: userId, room }, (error: any) => {
+    socket.emit("join", { name: userId, room}, (error: any) => {
       if (error) {
         alert(error);
       }
