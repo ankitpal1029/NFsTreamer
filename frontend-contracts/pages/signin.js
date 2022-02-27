@@ -4,9 +4,8 @@ import Image from "next/image";
 import twitchRedirect from "../lib/twitch_redirect";
 
 const SignIn = () => {
-  // const redirect = "";
+  console.log(twitchRedirect);
   const clientID = "j1ixdsvzh5g4uqj1a2p7lydufww406";
-  // const secret = "a33vihxvbozdhxixx6l8eo20io5qcx";
   const router = useRouter();
   const handleLogin = async (e) => {
     e.preventDefault();
