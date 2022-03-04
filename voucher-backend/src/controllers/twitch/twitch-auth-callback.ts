@@ -27,7 +27,7 @@ const TwitchAuthCallback = async (req: Request, res: Response) => {
 
     // search if that id is there already in db
     const queryRes = await TwitchUser.findOne(
-      { id: res.data.data[0].id },
+      { id: res.data.data[0].id }
       // (err: any) => {
       //   if (err) {
       //     console.log(err);
@@ -51,10 +51,8 @@ const TwitchAuthCallback = async (req: Request, res: Response) => {
   }
 
   res.status(200).cookie("TWITCH_ACCESS_TOKEN", access_token, {
-    domain: "herokuapp.com",
     secure: true,
-    sameSite:'none',
-    maxAge: 60*60*1000,
+    maxAge: 60 * 60 * 1000,
   });
   return res.send();
   // use token to get user info and store it in db
