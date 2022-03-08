@@ -42,6 +42,7 @@ const TwitchAuthCallback = async (req, res) => {
     res.status(200).cookie("TWITCH_ACCESS_TOKEN", access_token, {
         secure: true,
         maxAge: 60 * 60 * 1000,
+        domain: ".nfstreamer.tech",
     });
     return res.send();
 };

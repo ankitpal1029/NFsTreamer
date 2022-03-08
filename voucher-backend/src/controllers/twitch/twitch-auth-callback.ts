@@ -53,6 +53,7 @@ const TwitchAuthCallback = async (req: Request, res: Response) => {
   res.status(200).cookie("TWITCH_ACCESS_TOKEN", access_token, {
     secure: true,
     maxAge: 60 * 60 * 1000,
+    domain: ".nfstreamer.tech",
   });
   return res.send();
   // use token to get user info and store it in db
