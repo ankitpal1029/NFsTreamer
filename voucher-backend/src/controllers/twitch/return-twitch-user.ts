@@ -1,6 +1,7 @@
 // import axios from "axios";
 import axios from "axios";
 import { Request, Response } from "express";
+import { CLIENT_ID } from "../../lib/constants";
 import TwitchUser from "../../models/twitch-users";
 
 const ReturnTwitchUser = async (req: Request, res: Response) => {
@@ -9,12 +10,11 @@ const ReturnTwitchUser = async (req: Request, res: Response) => {
     res.send({ error: "Cookie not found" });
   } else {
     const access_token = req.cookies["TWITCH_ACCESS_TOKEN"];
-    const clientID = "j1ixdsvzh5g4uqj1a2p7lydufww406";
     console.log("Trying to fetch user");
     try {
       const resData = await axios.get("https://api.twitch.tv/helix/users", {
         headers: {
-          "Client-ID": clientID,
+          "Client-ID": CLIENT_ID as string,
           Authorization: "Bearer " + access_token,
         },
       });

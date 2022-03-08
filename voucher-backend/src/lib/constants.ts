@@ -6,6 +6,8 @@ const {
   DEV_FRONTEND_CORS,
   PROD_MARKETPLACE_CORS,
   DEV_MARKETPLACE_CORS,
+  DEV_TWITCH_CLIENTID,
+  PROD_TWITCH_CLIENTID,
 } = process.env;
 
 // const { PORT, DB_CONNECTION, FRONTEND_CORS, MARKETPLACE_CORS } = process.env;
@@ -22,3 +24,8 @@ export const MARKETPLACE_CORS =
   process.env.NODE_ENV === "development"
     ? DEV_MARKETPLACE_CORS
     : PROD_MARKETPLACE_CORS;
+
+export const CLIENT_ID =
+  process.env.NODE_ENV === "development"
+    ? DEV_TWITCH_CLIENTID
+    : PROD_TWITCH_CLIENTID;

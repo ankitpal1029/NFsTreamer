@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
+const constants_1 = require("../../lib/constants");
 const twitch_users_1 = __importDefault(require("../../models/twitch-users"));
 const ReturnTwitchUser = async (req, res) => {
     if (!req.cookies["TWITCH_ACCESS_TOKEN"]) {
@@ -11,12 +12,11 @@ const ReturnTwitchUser = async (req, res) => {
     }
     else {
         const access_token = req.cookies["TWITCH_ACCESS_TOKEN"];
-        const clientID = "j1ixdsvzh5g4uqj1a2p7lydufww406";
         console.log("Trying to fetch user");
         try {
             const resData = await axios_1.default.get("https://api.twitch.tv/helix/users", {
                 headers: {
-                    "Client-ID": clientID,
+                    "Client-ID": constants_1.CLIENT_ID,
                     Authorization: "Bearer " + access_token,
                 },
             });
