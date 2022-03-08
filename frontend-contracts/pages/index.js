@@ -17,7 +17,7 @@ import withAuth from "../components/HOC/withAuth";
 
 import LazyNFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 import axios from "../lib/axios_config";
-import { contract, deployer } from "../config";
+import { contract, deployer } from "../lib/config";
 
 // redux imports
 import { useDispatch } from "react-redux";

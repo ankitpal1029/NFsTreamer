@@ -6,16 +6,17 @@ import { useRouter } from "next/router";
 
 import Web3Modal from "web3modal";
 const { LazyMinter } = require("../lib");
-import Box from '@mui/material/Box';
+// import Box from '@mui/material/Box';
 
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+// import InputLabel from '@mui/material/InputLabel';
+// import MenuItem from '@mui/material/MenuItem';
+// import FormControl from '@mui/material/FormControl';
+// import Select from '@mui/material/Select';
 
-import { contract, deployer} from "../config";
+// import { contract, deployer} from "../config";
+import { contract, deployer } from "../lib/config"
 
-import Navbar from "../components/navbar";
+// import Navbar from "../components/navbar";
 import withAuth from "../components/HOC/withAuth";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");

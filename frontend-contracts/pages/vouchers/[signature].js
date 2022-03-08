@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 
 import NFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
-import { contract } from "../../config";
+import { contract } from "../../lib/config"
 import axios from "../../lib/axios_config";
 import withAuth from "../../components/HOC/withAuth";
 
