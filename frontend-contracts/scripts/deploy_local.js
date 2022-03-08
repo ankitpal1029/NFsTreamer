@@ -16,7 +16,7 @@ export const deployer= "${deployer.address}"
   `;
 
   let data = JSON.stringify(config);
-  fs.writeFileSync("config.js", JSON.parse(data));
+  fs.writeFileSync("config_local.js", JSON.parse(data));
 }
 
 try {
