@@ -12,3 +12,8 @@ export const contract =
 
 export const deployer =
   process.env.NODE_ENV === "development" ? deployer_dev : deployer_prod;
+
+export const CLIENT_ID =
+  process.env.NODE_ENV === "development"
+    ? "icaw947c6g5kf78s3rrdlko09uezcs"
+    : "j1ixdsvzh5g4uqj1a2p7lydufww406";

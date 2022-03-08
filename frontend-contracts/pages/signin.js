@@ -2,15 +2,15 @@ import { useRouter } from "next/router";
 import twitchIcon from "../assets/twitch_icon.png";
 import Image from "next/image";
 import twitchRedirect from "../lib/twitch_redirect";
+import { CLIENT_ID } from "../lib/config";
 
 const SignIn = () => {
   console.log(twitchRedirect);
-  const clientID = "j1ixdsvzh5g4uqj1a2p7lydufww406";
   const router = useRouter();
   const handleLogin = async (e) => {
     e.preventDefault();
     router.push(
-      `https://id.twitch.tv/oauth2/authorize?client_id=${clientID}&redirect_uri=${twitchRedirect}&response_type=token&scope=user:read:email`
+      `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${twitchRedirect}&response_type=token&scope=user:read:email`
     );
   };
 
