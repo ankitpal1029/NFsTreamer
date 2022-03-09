@@ -2,16 +2,16 @@
 
 const { TypedDataUtils } = require("ethers-eip712");
 
-const { NFTStorage, Blob } = require('nft.storage');
+// const { NFTStorage, Blob } = require('nft.storage');
 
 //import { NFTStorage,Blob } from 'nft.storage/dist/bundle.esm.min.js'
 
 //import NFTStorage from 'nft.storage/dist/bundle.esm.min.js';
 
-// const {
-//   NFTStorage,
-//   Blob,
-// } = require("https://cdn.jsdelivr.net/npm/nft.storage@v5.1.3/dist/bundle.esm.min.js");
+const {
+  NFTStorage,
+  Blob,
+} = require("https://cdn.jsdelivr.net/npm/nft.storage@v5.1.3/dist/bundle.esm.min.js");
 
 const endpoint = "https://api.nft.storage";
 const token =
