@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Request, Response } from "express";
-import { CLIENT_ID } from "../../lib/constants";
+import { CLIENT_ID, COOKIE_DOMAIN, COOKIE_SECURE } from "../../lib/constants";
 import TwitchUser from "../../models/twitch-users";
 
 const TwitchAuthCallback = async (req: Request, res: Response) => {
@@ -51,9 +51,9 @@ const TwitchAuthCallback = async (req: Request, res: Response) => {
   }
 
   res.status(200).cookie("TWITCH_ACCESS_TOKEN", access_token, {
-    secure: true,
+    secure: COOKIE_SECURE,
     maxAge: 60 * 60 * 1000,
-    domain: ".nfstreamer.tech",
+    domain: COOKIE_DOMAIN,
   });
   return res.send();
   // use token to get user info and store it in db

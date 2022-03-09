@@ -40,9 +40,9 @@ const TwitchAuthCallback = async (req, res) => {
         console.log(error);
     }
     res.status(200).cookie("TWITCH_ACCESS_TOKEN", access_token, {
-        secure: true,
+        secure: constants_1.COOKIE_SECURE,
         maxAge: 60 * 60 * 1000,
-        domain: ".nfstreamer.tech",
+        domain: constants_1.COOKIE_DOMAIN,
     });
     return res.send();
 };

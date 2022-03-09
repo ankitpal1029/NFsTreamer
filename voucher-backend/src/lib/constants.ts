@@ -29,3 +29,9 @@ export const CLIENT_ID =
   process.env.NODE_ENV === "development"
     ? DEV_TWITCH_CLIENTID
     : PROD_TWITCH_CLIENTID;
+
+export const COOKIE_DOMAIN =
+  process.env.NODE_ENV === "development" ? "localhost" : ".nfstreamer.tech";
+
+export const COOKIE_SECURE = 
+  process.env.NODE_ENV === "development" ? false: true;
