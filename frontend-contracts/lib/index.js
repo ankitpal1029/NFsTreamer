@@ -1,17 +1,17 @@
-const ethers = require("ethers");
+// const ethers = require("ethers");
 
 const { TypedDataUtils } = require("ethers-eip712");
 
-//const { NFTStorage, Blob } = require('nft.storage');
+const { NFTStorage, Blob } = require('nft.storage');
 
 //import { NFTStorage,Blob } from 'nft.storage/dist/bundle.esm.min.js'
 
 //import NFTStorage from 'nft.storage/dist/bundle.esm.min.js';
 
-const {
-  NFTStorage, 
-  Blob,
-} = require("https://cdn.jsdelivr.net/npm/nft.storage@v5.1.3/dist/bundle.esm.min.js");
+// const {
+//   NFTStorage,
+//   Blob,
+// } = require("https://cdn.jsdelivr.net/npm/nft.storage@v5.1.3/dist/bundle.esm.min.js");
 
 const endpoint = "https://api.nft.storage";
 const token =
@@ -24,7 +24,6 @@ class LazyMinter {
   constructor({ contractAddress, signer }) {
     this.contractAddress = contractAddress;
     this.signer = signer;
-    console.log(this.signer.getAddress());
 
     this.types = {
       EIP712Domain: [
@@ -63,6 +62,7 @@ class LazyMinter {
 
   async createVoucher(tokenId, uri, minPrice = 0, tier, collection) {
     const voucher = { tokenId, minPrice, uri,tier, collection };
+    console.log(voucher)
     
     const voucher_json = {
       "name": collection, 
@@ -86,7 +86,6 @@ class LazyMinter {
     const digest = TypedDataUtils.encodeDigest(typedData);
 
     const signature = await this.signer.signMessage(digest);
-    console.log(await this.signer.getAddress());
     return {
       voucher,
       meta,
