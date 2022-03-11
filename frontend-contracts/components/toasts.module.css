@@ -1,0 +1,23 @@
+.notificationWrapper {
+  @apply flex flex-row items-center justify-items-start w-96 px-4 py-6 text-white shadow-2xl hover:shadow-none transform-gpu translate-y-0 hover:translate-y-1 rounded-xl relative transition-all duration-500 ease-in-out;
+}
+
+.iconWrapper {
+  @apply text-xl;
+}
+
+.contentWrapper {
+  @apply flex flex-col items-center justify-center ml-4 cursor-default w-3/4;
+}
+
+.contentWrapper h1 {
+  @apply text-base text-white font-semibold leading-none tracking-wider;
+}
+
+.contentWrapper p {
+  @apply text-sm text-gray-200 mt-2 leading-relaxed tracking-wider;
+}
+
+.closeIcon {
+  @apply absolute top-2 right-2 cursor-pointer text-lg;
+}

@@ -13,7 +13,7 @@ const withAuth = (WrappedComponent) => {
           router.push("/signin");
         }
       });
-    });
+    }, []);
     return <WrappedComponent {...props} />;
   };
 };
