@@ -1,10 +1,10 @@
 import { useState, Component, useEffect } from "react";
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
-import Card from "@mui/material/Card"; 
+import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -57,7 +57,7 @@ const ListVouchers = () => {
           value: voucher.minPrice,
         }
       );
-      console.log("redeeming!!!!!")
+      console.log("redeeming!!!!!");
       console.log(res);
 
       try {
@@ -79,7 +79,6 @@ const ListVouchers = () => {
 
   return (
     <>
-      <Navbar />
       <div className="m-4">
         {vouchers.length ? (
           <div className="grid grid-cols-3 gap-4">
@@ -91,7 +90,7 @@ const ListVouchers = () => {
                       <CardHeader
                         //title="Banksy"
                         title={v.voucher.collection + " collection"}
-                        subheader={"Tier "+v.voucher.tier}
+                        subheader={"Tier " + v.voucher.tier}
                       />
                       <CardMedia
                         component="img"
