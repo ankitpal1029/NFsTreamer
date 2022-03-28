@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }) {
           notify({
             type: "error",
             header: "Madarchod",
-            body: "you could imagine you lil ",
+            body: "Teri ammi chodenge",
           })
         }
       >

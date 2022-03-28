@@ -96,7 +96,8 @@ const ListVouchers = () => {
                         component="img"
                         height="140"
                         image={
-                          "https://ipfs.io/ipfs/" + v.voucher.uri.split("//")[1]
+                          "https://ipfs.infura.io/ipfs/" +
+                          v.voucher.uri.split("//")[1]
                         }
                       />
 
