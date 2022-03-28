@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }) {
       <div>
         <Component {...pageProps} />
       </div>
-      <button
+      {/* <button
         onClick={(e) =>
           notify({
             type: "error",
@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }) {
         }
       >
         Notify
-      </button>
+      </button> */}
     </Provider>
   );
 }
