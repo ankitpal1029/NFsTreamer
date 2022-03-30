@@ -5,7 +5,6 @@ import twitchRedirect from "../lib/twitch_redirect";
 import { CLIENT_ID } from "../lib/config";
 
 const SignIn = () => {
-  console.log(twitchRedirect);
   const router = useRouter();
   const handleLogin = async (e) => {
     e.preventDefault();
