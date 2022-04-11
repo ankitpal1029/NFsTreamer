@@ -55,7 +55,7 @@ const UserNFT = ({
 
   const sendMessageToChat = (event: any, uri: string, tier: number) => {
     // setMessage({message: uri, points: tier*0.1});
-    sendMessage(event, {message:uri, points: tier*2 });
+    sendMessage(event, { message: uri, points: tier * 2 });
   };
   return (
     <div className="flex justify-center w-screen h-56 overflow-y-auto">
@@ -69,7 +69,7 @@ const UserNFT = ({
                 onClick={(event) => sendMessageToChat(event, nft.uri, nft.tier)}
               >
                 <img
-                  src={`https://ipfs.io/ipfs/${nft.uri.split("//")[1]}`}
+                  src={`https://ipfs.infura.io/ipfs/${nft.uri.split("//")[1]}`}
                   alt="couldn't load ..."
                   className="rounded"
                 />
