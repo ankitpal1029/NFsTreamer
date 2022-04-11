@@ -1,3 +1,4 @@
+import { IPFS_GATEWAY } from "../../../../config";
 import "./message.css";
 
 const Message = ({
@@ -22,7 +23,7 @@ const Message = ({
         {message.type === "emote" ? (
           <div className="bg-black border rounded-xl overflow-hidden ">
             <img
-              src={`https://ipfs.infura.io/ipfs/${text.split("//")[1]}`}
+              src={`${IPFS_GATEWAY}${text.split("//")[1]}`}
               alt="couldn't load ..."
               className="rounded"
             />
@@ -39,7 +40,7 @@ const Message = ({
         {message.type === "emote" ? (
           <div className="bg-black border rounded-xl overflow-hidden ">
             <img
-              src={`https://ipfs.infura.io/ipfs/${text.split("//")[1]}`}
+              src={`${IPFS_GATEWAY}${text.split("//")[1]}`}
               alt="couldn't load ..."
               className="rounded"
             />

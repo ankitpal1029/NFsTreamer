@@ -17,3 +17,5 @@ export const CLIENT_ID =
   process.env.NODE_ENV === "development"
     ? "icaw947c6g5kf78s3rrdlko09uezcs"
     : "j1ixdsvzh5g4uqj1a2p7lydufww406";
+
+export const IPFS_GATEWAY = "https://ipfs.infura.io/ipfs/";

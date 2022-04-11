@@ -12,7 +12,7 @@ import { ShortenAddress } from "../lib/shorten_address";
 
 import LazyNFT from "../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 import axios from "../lib/axios_config";
-import { contract, deployer } from "../lib/config";
+import { contract, deployer, IPFS_GATEWAY } from "../lib/config";
 
 // redux imports
 import { useDispatch } from "react-redux";
@@ -84,9 +84,7 @@ const ListVouchers = () => {
                     key={index}
                   >
                     <img
-                      src={`https://ipfs.infura.io/ipfs/${
-                        v.voucher.uri.split("//")[1]
-                      }`}
+                      src={`${IPFS_GATEWAY}${v.voucher.uri.split("//")[1]}`}
                       height={50}
                       width={50}
                       className="w-full object-center object-cover h-96"

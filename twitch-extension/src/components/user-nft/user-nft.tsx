@@ -7,6 +7,8 @@ import { lazynftaddress } from "../../config";
 import LazyNFT from "../../artifacts/contracts/LazyNFT.sol/LazyNFT.json";
 import { IMessageToBeSent } from "../../pages/panel.html";
 
+import { IPFS_GATEWAY } from "../../config";
+
 interface INFTDetails {
   collection: string;
   creator: string;
@@ -69,7 +71,7 @@ const UserNFT = ({
                 onClick={(event) => sendMessageToChat(event, nft.uri, nft.tier)}
               >
                 <img
-                  src={`https://ipfs.infura.io/ipfs/${nft.uri.split("//")[1]}`}
+                  src={`${IPFS_GATEWAY}${nft.uri.split("//")[1]}`}
                   alt="couldn't load ..."
                   className="rounded"
                 />
